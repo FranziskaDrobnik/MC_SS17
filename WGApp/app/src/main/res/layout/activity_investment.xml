@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="mocosose17.wgapp.InvestmentActivity">
+
+
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_height="fill_parent"
+        android:stretchColumns="*">
+
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="100px">
+
+
+
+        </TableRow>
+        <!-- Row 3 with 2 columns -->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="100px">
+
+            <EditText
+                android:id="@+id/reason"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="20dip"
+                android:hint= "Reason"
+                android:textColor="#000000" />
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/amount"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="20dip"
+                android:inputType="numberDecimal"
+                android:hint= "€"
+                android:textColor="#000000" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/ButtonInsert"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="20dip"
+                android:text="insert" />
+        </TableRow>
+
+    </TableLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

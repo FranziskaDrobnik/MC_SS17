@@ -129,8 +129,8 @@ class VerifyLogin extends AsyncTask<String, Void, Void> {
             globalObjs.setUsername(username);
 
             Log.e("USERinLogin", globalObjs.getUsername());
-//            Intent i = new Intent(context, RegisterActivity.class);
-//            context.startActivity(i);
+            Intent i = new Intent(context, InvestmentActivity.class);
+                context.startActivity(i);
         }else{
             Toast.makeText(context,"login failed",Toast.LENGTH_LONG).show();
         }
