@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/skBezeichnungTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Bezeichnung"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/skMengeTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Menge"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <EditText
+        android:id="@+id/skMindestmengeTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Mindestmenge"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <Spinner
+        android:id="@+id/skSpinnerTypV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/categoriestyp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <Spinner
+        android:id="@+id/skSpinnerCatV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/categories" />
+
+    <Button
+        android:id="@+id/skAddButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Hinzufügen"
+        android:textAlignment="center" />
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="speisekammerImgIds">
+        <item>@drawable/beverages</item>
+        <item>@drawable/bread</item>
+        <item>@drawable/freezed</item>
+        <item>@drawable/fridge</item>
+        <item>@drawable/fruit</item>
+        <item>@drawable/misc</item>
+        <item>@drawable/pasta</item>
+        <item>@drawable/vegetables</item>
+        <item>@drawable/add</item>
+    </integer-array>
+
+
+
+</resources>
