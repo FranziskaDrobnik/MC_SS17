@@ -41,10 +41,16 @@ public class MainActivity extends AppCompatActivity {
     public void executeLogin(View view){
         String username = inputUsername.getText().toString();
         String password = inputPassword.getText().toString();
+//
+//        GlobalObjects globalObjs = GlobalObjects.getInstance();
+//        globalObjs.setUsername(username);
+//
+//        Log.e("USERinLogin", globalObjs.getUsername());
 
         new VerifyLogin(MainActivity.this).execute(username, password);
 
-
+//        GlobalObjects go = (GlobalObjects) getApplicationContext();
+//        String globalUser = go.getUsername();
     }
 
     public void noAccount(View view){
@@ -56,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 class VerifyLogin extends AsyncTask<String, Void, Void> {
     public String response = "";
     private Context context;
+    private String username;
 
     protected VerifyLogin(Context context) {
         this.context = context;
@@ -73,6 +80,7 @@ class VerifyLogin extends AsyncTask<String, Void, Void> {
 
 
 
+
             JSONObject credentials = new JSONObject();
             try {
                 credentials.put("username", params[0]);
@@ -80,6 +88,7 @@ class VerifyLogin extends AsyncTask<String, Void, Void> {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            this.username = params[0];
 
             String str = credentials.toString();
             byte[] outputBytes = str.getBytes("UTF-8");
@@ -116,6 +125,10 @@ class VerifyLogin extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void unused){
         if(Boolean.valueOf(response)){
             Toast.makeText(context,"login success",Toast.LENGTH_LONG).show();
+            GlobalObjects globalObjs = GlobalObjects.getInstance();
+            globalObjs.setUsername(username);
+
+            Log.e("USERinLogin", globalObjs.getUsername());
 //            Intent i = new Intent(context, RegisterActivity.class);
 //            context.startActivity(i);
         }else{
