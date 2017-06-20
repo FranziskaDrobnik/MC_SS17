@@ -30,7 +30,7 @@
             android:id="@+id/speisekammerCAtv1"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Menge"
+            android:text="Hinzufügen"
             android:textStyle="bold" />
 
         <SeekBar
@@ -45,13 +45,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
-        <EditText
-            android:id="@+id/speisekammerCAAmount"
+        <TextView
+            android:id="@+id/speisekammerCAtv2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="Momentane Menge"
+            android:textAlignment="textStart"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/speisekammerCAAmount"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="right"
             android:inputType="numberSigned|numberDecimal"
