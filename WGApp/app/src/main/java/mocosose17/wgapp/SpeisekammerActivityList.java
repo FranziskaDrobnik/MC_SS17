@@ -42,6 +42,10 @@ public class SpeisekammerActivityList extends AppCompatActivity {
     public String[]in;
     public ArrayList<String> amount = new ArrayList<String>();
     public String[] am;
+    public ArrayList<String> mamount = new ArrayList<String>();
+    public String[] mam;
+    public ArrayList<String> type = new ArrayList<String>();
+    public String[] ty;
     public ListView lv;
 
     public String cat = "Default";
@@ -77,7 +81,9 @@ public class SpeisekammerActivityList extends AppCompatActivity {
 
         in = itemname.toArray(new String[itemname.size()]);
         am = amount.toArray(new String[amount.size()]);
-        scla = new SpeisekammerCustomListAdapter(this, in, am);
+        mam = mamount.toArray(new String[mamount.size()]);
+        ty = type.toArray(new String[type.size()]);
+        scla = new SpeisekammerCustomListAdapter(this, in, am, mam, ty);
         lv = (ListView)findViewById(R.id.speisekammerList);
         lv.setAdapter(scla);
 
@@ -168,11 +174,15 @@ public class SpeisekammerActivityList extends AppCompatActivity {
                     JSONArray dbitems = new JSONArray(response);
                     itemname.clear();
                     amount.clear();
+                    mamount.clear();
+                    type.clear();
                     for(int i = 0; i < dbitems.length(); i++){
                         JSONObject obji = (JSONObject)dbitems.get(i);
                         if(obji.getString("category").equals(cat)){
                             itemname.add(obji.getString("articleName"));
-                            amount.add(obji.getString("quantity") + " " + obji.get("type"));
+                            amount.add(obji.getString("quantity"));
+                            type.add(obji.getString("type"));
+                            mamount.add(obji.getString("minQuantity"));
                         }
                     }
                 }else{
@@ -182,7 +192,9 @@ public class SpeisekammerActivityList extends AppCompatActivity {
                 if(itemname.size() >= 0){
                     in = itemname.toArray(new String[itemname.size()]);
                     am = amount.toArray(new String[amount.size()]);
-                    scla = new SpeisekammerCustomListAdapter(SpeisekammerActivityList.this, in, am);
+                    mam = mamount.toArray(new String[mamount.size()]);
+                    ty = type.toArray(new String[type.size()]);
+                    scla = new SpeisekammerCustomListAdapter(SpeisekammerActivityList.this, in, am, mam, ty);
                     lv.setAdapter(scla);
                 }
 
