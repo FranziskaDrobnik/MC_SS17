@@ -49,6 +49,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
     public ListView lv;
 
     public String cat = "Default";
+    public String highlight = null;
 
     public SpeisekammerCustomListAdapter scla;
 
@@ -72,6 +73,9 @@ public class SpeisekammerActivityList extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             category = extras.getString("STRING_CATEGORY");
+            if(extras.size() > 1){
+                highlight = extras.getString("SEARCHRESULT");
+            }
         }
 
         cat = category;

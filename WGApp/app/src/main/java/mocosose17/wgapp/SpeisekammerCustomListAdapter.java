@@ -67,6 +67,12 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
         itemView.setText(itemname[position]);
         amountView.setText(amount[position]+" "+type[position]);
 
+        if(((SpeisekammerActivityList)context).highlight != null){
+            if(itemView.getText().toString().equals(((SpeisekammerActivityList)context).highlight)){
+                rowView.setBackgroundColor(Color.parseColor("#fffeaa0c"));
+            }
+        }
+
         // Check for minQuantity
         if(Integer.parseInt(amount[position]) < Integer.parseInt(mamount[position])){
             amountView.setTextColor(Color.RED);

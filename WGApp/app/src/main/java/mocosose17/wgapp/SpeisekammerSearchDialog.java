@@ -56,6 +56,7 @@ public class SpeisekammerSearchDialog extends DialogFragment {
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), SpeisekammerActivityList.class);
                 i.putExtra("STRING_CATEGORY", ((TextView)getDialog().findViewById(R.id.speisekammerSDTypeTv)).getText().toString());
+                i.putExtra("SEARCHRESULT", ((TextView)getDialog().findViewById(R.id.speisekammerItem)).getText().toString());
                 startActivity(i);
                 getDialog().dismiss();
             }
