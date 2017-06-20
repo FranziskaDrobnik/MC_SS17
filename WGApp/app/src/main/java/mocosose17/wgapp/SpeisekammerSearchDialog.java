@@ -2,6 +2,7 @@ package mocosose17.wgapp;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.DialogFragment;
@@ -48,11 +49,14 @@ public class SpeisekammerSearchDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        Button del = (Button)this.getDialog().findViewById(R.id.speisekammerRemoveButton);
-        del.setOnClickListener(new View.OnClickListener() {
+        Button toList = (Button)this.getDialog().findViewById(R.id.speisekammerToList);
+        toList.setEnabled(false);
+        toList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String s = ((TextView)getDialog().findViewById(R.id.speisekammerItem)).getText().toString();
+                Intent i = new Intent(getActivity(), SpeisekammerActivityList.class);
+                i.putExtra("STRING_CATEGORY", ((TextView)getDialog().findViewById(R.id.speisekammerSDTypeTv)).getText().toString());
+                startActivity(i);
                 getDialog().dismiss();
             }
         });
@@ -104,12 +108,28 @@ public class SpeisekammerSearchDialog extends DialogFragment {
         }
 
         protected void onPostExecute(Void unused) {
-            try {
-                JSONObject dbitems = new JSONObject(response);
-                ((TextView)getDialog().findViewById(R.id.speisekammerItem)).setText(dbitems.getString("articleName"));
-                ((TextView)getDialog().findViewById(R.id.speisekammerAmount)).setText(dbitems.getString("articleName"));
+            if(response.length() < 5){
+                getDialog().findViewById(R.id.speisekammerToList).setEnabled(false);
+                ((TextView)getDialog().findViewById(R.id.speisekammerSearchResult)).setText("Suche ergab keine Treffer");
+                ((TextView)getDialog().findViewById(R.id.speisekammerItem)).setText("");
+                ((TextView)getDialog().findViewById(R.id.speisekammerAmount)).setText("");
+                ((TextView)getDialog().findViewById(R.id.speisekammerSDTypeTv)).setText("");
+            }else{
+                try {
+                    JSONArray dbitems = new JSONArray(response);
+                    JSONObject obji = dbitems.getJSONObject(0);
+
+                    ((TextView)getDialog().findViewById(R.id.speisekammerItem)).setText(obji.getString("articleName"));
+                    ((TextView)getDialog().findViewById(R.id.speisekammerAmount)).setText(obji.getString("quantity")+" "+obji.getString("type"));
+                    ((TextView)getDialog().findViewById(R.id.speisekammerSDTypeTv)).setText(obji.getString("category"));
+
+                    getDialog().findViewById(R.id.speisekammerToList).setEnabled(true);
+
                 }catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
 
 
         }

@@ -102,10 +102,6 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
         @Override
         protected Void doInBackground(String... params) {
             this.params = params;
-            Log.d("Paramlength", this.params.length+"\t"+params.length);
-            for(int i = 0; i < this.params.length; i++){
-                Log.d("Param "+i,this.params[i]);
-            }
             URL url;
             if(params.length == 1){
                 try {
