@@ -54,7 +54,7 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
         final String type = ((SpeisekammerActivityList)getActivity()).scla.toChangeType;
 
         ((TextView)getDialog().findViewById(R.id.speisekammerSDTitle)).setText(name + " zur Einkaufsliste hinzufügen");
-        ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).setHint("1");
+        ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).setHint("0");
         ((TextView)getDialog().findViewById(R.id.speisekammerSDType)).setText(type);
 
         SeekBar seeker = (SeekBar)getDialog().findViewById(R.id.speisekammerSDSeek);
