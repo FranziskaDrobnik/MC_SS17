@@ -57,6 +57,7 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
     }
 
     public View getView(int position, View view, ViewGroup parent) {
+
         final LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.speisekammerlistelement, parent,false);
 
@@ -66,11 +67,13 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
         itemView.setText(itemname[position]);
         amountView.setText(amount[position]+" "+type[position]);
 
+        // Check for minQuantity
         if(Integer.parseInt(amount[position]) < Integer.parseInt(mamount[position])){
             amountView.setTextColor(Color.RED);
             new ShoppingAdd(context).execute(itemname[position]);
         }
 
+        // Remove button interaction
         Button remove = (Button)rowView.findViewById(R.id.speisekammerRemoveButton);
         remove.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -82,49 +85,65 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
             }
         });
 
+        // Increase Button interaction
         Button increase = (Button)rowView.findViewById(R.id.speisekammerAddAmount);
         increase.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 View parentRow = (View) v.getParent();
                 ListView listView = (ListView) parentRow.getParent();
                 final int position = listView.getPositionForView(parentRow);
-                toChangeName= listView.getItemAtPosition(position).toString();
+
+                toChangeName = listView.getItemAtPosition(position).toString();
                 String temps = ((TextView)listView.getChildAt(position).findViewById(R.id.speisekammerAmount)).getText().toString();
                 String[] split = temps.split(" ");
                 toChangeAmount = Integer.parseInt(split[0]);
                 toChangeType = split[1];
                 toIncrease = true;
+
                 SpeisekammerChangeAmountDialog dialog = new SpeisekammerChangeAmountDialog();
                 FragmentManager fm =  context.getFragmentManager();
                 dialog.show(fm, "Neuer Wert");
             }
         });
 
+        // Decrease Button interaction
         Button decrease = (Button)rowView.findViewById(R.id.speisekammerReduceAmount);
         decrease.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 View parentRow = (View) v.getParent();
                 ListView listView = (ListView) parentRow.getParent();
                 final int position = listView.getPositionForView(parentRow);
-                toChangeName= listView.getItemAtPosition(position).toString();
+
+                toChangeName = listView.getItemAtPosition(position).toString();
                 String temps = ((TextView)listView.getChildAt(position).findViewById(R.id.speisekammerAmount)).getText().toString();
                 String[] split = temps.split(" ");
                 toChangeAmount = Integer.parseInt(split[0]);
                 toChangeType = split[1];
                 toIncrease = false;
+
                 SpeisekammerChangeAmountDialog dialog = new SpeisekammerChangeAmountDialog();
                 FragmentManager fm =  context.getFragmentManager();
                 dialog.show(fm, "Neuer Wert");
             }
         });
 
+        // Shopping cart Button interaction
         Button shopping = (Button)rowView.findViewById(R.id.speisekammerShoppingCart);
         shopping.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 View parentRow = (View) v.getParent();
                 ListView listView = (ListView) parentRow.getParent();
                 final int position = listView.getPositionForView(parentRow);
-                String itemName = listView.getItemAtPosition(position).toString();
+
+                toChangeName = listView.getItemAtPosition(position).toString();
+                String temps = ((TextView)listView.getChildAt(position).findViewById(R.id.speisekammerAmount)).getText().toString();
+                String[] split = temps.split(" ");
+                toChangeAmount = Integer.parseInt(split[0]);
+                toChangeType = split[1];
+
+                SpeisekammerShoppingDialog dialog = new SpeisekammerShoppingDialog();
+                FragmentManager fm = context.getFragmentManager();
+                dialog.show(fm, "Einkaufsliste-Eintrag");
             }
         });
 
@@ -145,6 +164,7 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
         protected Void doInBackground(String... params) {
             this.params = params;
             URL url;
+
             if(params.length == 1){
                 try {
                     url = new URL("http://mc-wgapp.mybluemix.net/shoppinglist/"+params[0]);
