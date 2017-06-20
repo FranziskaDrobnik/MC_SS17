@@ -98,6 +98,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
 
         });
 
+
         new SpecifiedItems(SpeisekammerActivityList.this).execute();
 
     }

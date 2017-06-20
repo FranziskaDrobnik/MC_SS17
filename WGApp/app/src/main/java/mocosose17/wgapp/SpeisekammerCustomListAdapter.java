@@ -1,6 +1,7 @@
 package mocosose17.wgapp;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -39,6 +40,11 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
     private final String[] mamount;
     private final String[] type;
 
+    public int toChangeAmount = 0;
+    public String toChangeName = "";
+    public String toChangeType = "";
+    public boolean toIncrease = true;
+
     public SpeisekammerCustomListAdapter(Activity context, String[] itemname, String[] amount, String[] mamount, String[] type){
 
         super(context, R.layout.speisekammerlistelement, itemname);
@@ -73,6 +79,42 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
                 final int position = listView.getPositionForView(parentRow);
                 String s = listView.getItemAtPosition(position).toString();
                 ((SpeisekammerActivityList)context).delete(s);
+            }
+        });
+
+        Button increase = (Button)rowView.findViewById(R.id.speisekammerAddAmount);
+        increase.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                View parentRow = (View) v.getParent();
+                ListView listView = (ListView) parentRow.getParent();
+                final int position = listView.getPositionForView(parentRow);
+                toChangeName= listView.getItemAtPosition(position).toString();
+                String temps = ((TextView)listView.getChildAt(position).findViewById(R.id.speisekammerAmount)).getText().toString();
+                String[] split = temps.split(" ");
+                toChangeAmount = Integer.parseInt(split[0]);
+                toChangeType = split[1];
+                toIncrease = true;
+                SpeisekammerChangeAmountDialog dialog = new SpeisekammerChangeAmountDialog();
+                FragmentManager fm =  context.getFragmentManager();
+                dialog.show(fm, "Neuer Wert");
+            }
+        });
+
+        Button decrease = (Button)rowView.findViewById(R.id.speisekammerReduceAmount);
+        decrease.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                View parentRow = (View) v.getParent();
+                ListView listView = (ListView) parentRow.getParent();
+                final int position = listView.getPositionForView(parentRow);
+                toChangeName= listView.getItemAtPosition(position).toString();
+                String temps = ((TextView)listView.getChildAt(position).findViewById(R.id.speisekammerAmount)).getText().toString();
+                String[] split = temps.split(" ");
+                toChangeAmount = Integer.parseInt(split[0]);
+                toChangeType = split[1];
+                toIncrease = false;
+                SpeisekammerChangeAmountDialog dialog = new SpeisekammerChangeAmountDialog();
+                FragmentManager fm =  context.getFragmentManager();
+                dialog.show(fm, "Neuer Wert");
             }
         });
 
