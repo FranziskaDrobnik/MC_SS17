@@ -22,12 +22,14 @@ public class Item {
     private String name;
     private boolean bought;
     private String unitkind;
+    private String category;
     private String amount;
     private boolean newlyCreated=false;
 
     public EditText etName;
     public EditText etAmount;
     public Spinner spUnitKind;
+    public Spinner spCategory;
     public CheckBox cbBought;
     public LinearLayout layout;
 
@@ -78,6 +80,7 @@ public class Item {
     public String getUnitkind() {
         return unitkind;
     }
+    public String getCategory(){return category;}
 
     public String getAmount() {
         return amount;
@@ -89,6 +92,7 @@ public class Item {
     public void setUnitkind(String unitkind) {
         this.unitkind = unitkind;
     }
+    public void setCategory(String category){this.category=category;}
 
 
     // Will be used by the ArrayAdapter in the ListView

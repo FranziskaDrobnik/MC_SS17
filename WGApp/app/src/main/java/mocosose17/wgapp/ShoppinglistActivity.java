@@ -1,5 +1,15 @@
 package mocosose17.wgapp;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -16,53 +26,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -71,14 +34,13 @@ import org.json.JSONObject;
 
 //import static com.vogella.android.devogellaandroidsqlitefirst.R.layout.item_comment;
 
-public class TestDatabaseActivity extends Activity {
-    //private ItemsDataSource datasource;
+public class ShoppinglistActivity extends Activity {
     ArrayList<Item> items = new ArrayList<Item>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.shoppinglist);
 
 
         /*datasource = new ItemsDataSource(this);
@@ -142,17 +104,23 @@ public class TestDatabaseActivity extends Activity {
                     canParse = false;
                 }
 
+
                 if (!canParse) {
                     Toast.makeText(this, "\"" + text + "\" ist kein gültiger Betrag.", Toast.LENGTH_LONG).show();
                 } else {
                     for (int i = 0; i < items.size(); i++) {
                         item = items.get(i);
                         if (item.getNewlyCreated() && item.getBought()) {
-                            new AddArticleToPantry(item).execute();
-                            boughtItems++;
-                            sb.append(item.getName());
-                            i--;//sonst werdenb items übersprungen
-                            removeItem(item);
+                            if (((EditText) findViewById(R.id.etPrice)).getText().toString().equalsIgnoreCase("0,00")) {
+                                ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
+                                ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
+                            }else {
+                                new AddArticleToPantry(item).execute();
+                                boughtItems++;
+                                sb.append(item.getName());
+                                i--;//sonst werdenb items übersprungen
+                                removeItem(item);
+                            }
                         } else if (item.getNewlyCreated()) {
                             new AddArticleToShoppinglist(item).execute();
                             item.setNewlyCreated(false);
@@ -161,46 +129,71 @@ public class TestDatabaseActivity extends Activity {
                             item.spUnitKind.setEnabled(false);
                         } else if (item.getBought()) {
                             Log.d("","add to pantry");
-                            new AddArticleToPantry(item).execute();
-                            new DeleteArticleFromShoppinglist(item).execute();
-                            boughtItems++;
-                            sb.append(item.getName());
-                            i--;//sonst werden items übersprungen
-                            removeItem(item);
+                            if (((EditText) findViewById(R.id.etPrice)).getText().toString().equalsIgnoreCase("0,00")) {
+                                ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
+                                ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
+                            }else {
+                                new AddArticleToPantry(item).execute();
+                                new DeleteArticleFromShoppinglist(item).execute();
+                                boughtItems++;
+                                sb.append(item.getName());
+                                i--;//sonst werden items übersprungen
+                                removeItem(item);
+                            }
                         }
                     }
                     //Woher weiß die RestAPI wer (welcher User) die Anfrage macht??
-                    if (boughtItems > 0)
-                        new AddInvestment(((EditText) findViewById(R.id.etPrice)).getText().toString(), sb.toString()).execute();
-                    ((EditText) findViewById(R.id.etPrice)).setText("0,00");
+                    if (boughtItems > 0) {
+                        //  if(((EditText) findViewById(R.id.etPrice)).getText().toString()=="0.00"){
+                        //   Toast.makeText(this, "Bitte geben Sie einen Betrag für Ihren Einkauf ein!",
+                        //   Toast.LENGTH_LONG).show();
+                        //}
+                        if(((EditText) findViewById(R.id.etPrice)).getText().toString().equalsIgnoreCase("0,00"))
+                        {
+                            ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
+                            ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
+                        }else {
+                            new AddInvestment(((EditText) findViewById(R.id.etPrice)).getText().toString(), sb.toString()).execute();
+                            ((EditText) findViewById(R.id.etPrice)).setText("0,00");
+                        }
+                    }
                 }
         }
         //adapter.notifyDataSetChanged();
     }
 
     public void addItem(final Item item) {
-        LinearLayout listView = (LinearLayout) findViewById(R.id.mainLayout);
+        LinearLayout listView = (LinearLayout) findViewById(R.id.mainLayoutShoppinglist);
         items.add(item);
-        item.etAmount = new EditText(TestDatabaseActivity.this);//(EditText) convertView.findViewById(R.id.etAmount);
-        item.spUnitKind = new Spinner(TestDatabaseActivity.this, Spinner.MODE_DROPDOWN);
-        final String[] unitkinds = new String[]{"Stk", "g", "kg", "ml", "l", "Becher"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(TestDatabaseActivity.this, android.R.layout.simple_spinner_dropdown_item, unitkinds);
+        item.etAmount = new EditText(ShoppinglistActivity.this);//(EditText) convertView.findViewById(R.id.etAmount);
+        item.spUnitKind = new Spinner(ShoppinglistActivity.this, Spinner.MODE_DROPDOWN);
+        final String[] unitkinds = new String[]{"Stk", "g", "kg", "ml", "l"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ShoppinglistActivity.this, android.R.layout.simple_spinner_dropdown_item, unitkinds);
         item.spUnitKind.setAdapter(adapter);
-        item.etName = new EditText(TestDatabaseActivity.this);//(EditText) convertView.findViewById(R.id.etName);
-        item.cbBought = new CheckBox(TestDatabaseActivity.this);//(CheckBox) convertView.findViewById(R.id.cbBought);
+        item.etName = new EditText(ShoppinglistActivity.this);//(EditText) convertView.findViewById(R.id.etName);
+        //neu
+        item.spCategory = new Spinner(ShoppinglistActivity.this, Spinner.MODE_DROPDOWN);
+        final String[] categories = new String[]{"Sonstiges", "Getränke", "Backwaren", "Tiefkühl", "Kühlschrank", "Früchte", "Teigwaren", "Gemüse"};
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(ShoppinglistActivity.this, android.R.layout.simple_spinner_dropdown_item, categories);
+        item.spCategory.setAdapter(categoryAdapter);
+        item.cbBought = new CheckBox(ShoppinglistActivity.this);//(CheckBox) convertView.findViewById(R.id.cbBought);
 
         //LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.MarginLayoutParams., LinearLayout.LayoutParams.WRAP_CONTENT);
-        item.layout = new LinearLayout(TestDatabaseActivity.this);
+        item.layout = new LinearLayout(ShoppinglistActivity.this);
+        item.layout.addView(item.cbBought);
         item.layout.addView(item.etAmount);
         item.layout.addView(item.spUnitKind);
+        item.layout.addView(item.spCategory);
         item.layout.addView(item.etName);
-        item.layout.addView(item.cbBought);
+
+
         listView.addView(item.layout);
 
         item.etName.setText(item.getName());
         item.cbBought.setChecked(item.getBought());
         item.etAmount.setText(item.getAmount());
         item.spUnitKind.setSelection(Arrays.asList(unitkinds).indexOf(item.getUnitkind()));
+        item.spCategory.setSelection(Arrays.asList(categories).indexOf(item.getCategory()));
 
         item.cbBought.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -213,6 +206,18 @@ public class TestDatabaseActivity extends Activity {
                     item.setBought(false);
                 }
             }
+        });
+        item.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                item.setCategory(((CheckedTextView) selectedItemView).getText().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
         });
 
         if (!item.getNewlyCreated()) {
@@ -266,6 +271,7 @@ public class TestDatabaseActivity extends Activity {
                 }
 
             });
+
         }
     }
 
@@ -500,6 +506,7 @@ public class TestDatabaseActivity extends Activity {
                     credentials.put("articleName", item.getName());
                     credentials.put("quantity", item.getAmount());
                     credentials.put("type", item.getUnitkind());
+                    credentials.put("category", item.getCategory());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -561,6 +568,7 @@ public class TestDatabaseActivity extends Activity {
                 try {
                     credentials.put("amount", price.replace('.',','));
                     credentials.put("reason", reason);
+                    credentials.put("user", "bla"); //TODO User einfügen
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
