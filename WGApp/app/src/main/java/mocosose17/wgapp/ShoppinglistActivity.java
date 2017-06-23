@@ -100,6 +100,11 @@ public class ShoppinglistActivity extends Activity {
 
                 try {
                     double d = Double.parseDouble(text);
+                    if (d==0) {
+                        ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
+                        ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
+                        return;
+                    }
                 } catch (Exception e) {
                     canParse = false;
                 }
@@ -108,19 +113,15 @@ public class ShoppinglistActivity extends Activity {
                 if (!canParse) {
                     Toast.makeText(this, "\"" + text + "\" ist kein gültiger Betrag.", Toast.LENGTH_LONG).show();
                 } else {
+
                     for (int i = 0; i < items.size(); i++) {
                         item = items.get(i);
                         if (item.getNewlyCreated() && item.getBought()) {
-                            if (((EditText) findViewById(R.id.etPrice)).getText().toString().equalsIgnoreCase("0,00")) {
-                                ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
-                                ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
-                            }else {
-                                new AddArticleToPantry(item).execute();
-                                boughtItems++;
-                                sb.append(item.getName());
-                                i--;//sonst werdenb items übersprungen
-                                removeItem(item);
-                            }
+                            new AddArticleToPantry(item).execute();
+                            boughtItems++;
+                            sb.append(item.getName());
+                            i--;//sonst werdenb items übersprungen
+                            removeItem(item);
                         } else if (item.getNewlyCreated()) {
                             new AddArticleToShoppinglist(item).execute();
                             item.setNewlyCreated(false);
@@ -129,17 +130,13 @@ public class ShoppinglistActivity extends Activity {
                             item.spUnitKind.setEnabled(false);
                         } else if (item.getBought()) {
                             Log.d("","add to pantry");
-                            if (((EditText) findViewById(R.id.etPrice)).getText().toString().equalsIgnoreCase("0,00")) {
-                                ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
-                                ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
-                            }else {
-                                new AddArticleToPantry(item).execute();
-                                new DeleteArticleFromShoppinglist(item).execute();
-                                boughtItems++;
-                                sb.append(item.getName());
-                                i--;//sonst werden items übersprungen
-                                removeItem(item);
-                            }
+                            new AddArticleToPantry(item).execute();
+                            new DeleteArticleFromShoppinglist(item).execute();
+                            boughtItems++;
+                            sb.append(item.getName());
+                            i--;//sonst werden items übersprungen
+                            removeItem(item);
+
                         }
                     }
                     //Woher weiß die RestAPI wer (welcher User) die Anfrage macht??
@@ -148,18 +145,11 @@ public class ShoppinglistActivity extends Activity {
                         //   Toast.makeText(this, "Bitte geben Sie einen Betrag für Ihren Einkauf ein!",
                         //   Toast.LENGTH_LONG).show();
                         //}
-                        if(((EditText) findViewById(R.id.etPrice)).getText().toString().equalsIgnoreCase("0,00"))
-                        {
-                            ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
-                            ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
-                        }else {
-                            new AddInvestment(((EditText) findViewById(R.id.etPrice)).getText().toString(), sb.toString()).execute();
-                            ((EditText) findViewById(R.id.etPrice)).setText("0,00");
-                        }
+                        new AddInvestment(((EditText) findViewById(R.id.etPrice)).getText().toString(), sb.toString()).execute();
+                        ((EditText) findViewById(R.id.etPrice)).setText("0,00");
                     }
                 }
         }
-        //adapter.notifyDataSetChanged();
     }
 
     public void addItem(final Item item) {
@@ -180,11 +170,14 @@ public class ShoppinglistActivity extends Activity {
 
         //LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.MarginLayoutParams., LinearLayout.LayoutParams.WRAP_CONTENT);
         item.layout = new LinearLayout(ShoppinglistActivity.this);
-        item.layout.addView(item.cbBought);
-        item.layout.addView(item.etAmount);
-        item.layout.addView(item.spUnitKind);
-        item.layout.addView(item.spCategory);
+        item.layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout i = new LinearLayout(ShoppinglistActivity.this);
+        i.addView(item.cbBought);
+        i.addView(item.etAmount);
+        i.addView(item.spUnitKind);
+        i.addView(item.spCategory);
         item.layout.addView(item.etName);
+        item.layout.addView(i);
 
 
         listView.addView(item.layout);
@@ -276,7 +269,7 @@ public class ShoppinglistActivity extends Activity {
     }
 
     public void removeItem(Item item) {
-        LinearLayout listView = (LinearLayout) findViewById(R.id.mainLayout);
+        LinearLayout listView = (LinearLayout) findViewById(R.id.mainLayoutShoppinglist);
 
         listView.removeView(item.layout);
         item.layout = null;
