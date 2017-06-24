@@ -39,7 +39,6 @@ public class Calculation {
             sum += users.get(i).getFistEdition();
         }
         double output = sum/users.size();
-        System.out.println("output: " + output);
 
         for(int i =0; i< users.size(); i++) {
             users.get(i).setInvestment(users.get(i).getFistEdition()-output);
@@ -55,7 +54,7 @@ public class Calculation {
 
 
 
-        test(PosUsers.get(0),NegUsers.get(0));
+        callUserInvestment(PosUsers.get(0),NegUsers.get(0));
         ArrayList <UserAdapter>  alleUser = new ArrayList<UserAdapter>();
         for (int i = 0; i< PosUsers.size(); i++) {
             alleUser.add(PosUsers.get(i));
@@ -69,9 +68,9 @@ public class Calculation {
     }
 
 
-    public void test(UserAdapter pos,UserAdapter neg){
+    public void callUserInvestment(UserAdapter pos,UserAdapter neg){
 
-        int result = rechnen(pos, neg);
+        int result = calc(pos, neg);
 
         UserAdapter posUser = null;
         UserAdapter negUser = null;
@@ -82,10 +81,10 @@ public class Calculation {
             case 1: result = 1;
 
                 for(int i =0; i< NegUsers.size(); i++){
-                    if(NegUsers.get(i).getName() == neg.getName()) {
+                    if(NegUsers.get(i).getName().equals(neg.getName())) {
                         if (i + 1 < NegUsers.size()) {
                             negUser = NegUsers.get(i + 1);
-                            test(pos, negUser);
+                            callUserInvestment(pos, negUser);
                         }
                     }
 
@@ -95,10 +94,10 @@ public class Calculation {
 
             case 2: result = 2;
                 for(int i =0; i< PosUsers.size(); i++){
-                    if(PosUsers.get(i).getName() == pos.getName()){
+                    if(PosUsers.get(i).getName().equals(pos.getName())){
                         if (i + 1 < PosUsers.size()) {
                             posUser = PosUsers.get(i + 1);
-                            test(posUser, neg);
+                            callUserInvestment(posUser, neg);
                         }
                     }
 
@@ -108,7 +107,7 @@ public class Calculation {
             case 3: result = 3;
 
                 for(int i =0; i< PosUsers.size(); i++){
-                    if(PosUsers.get(i).getName() == pos.getName()){
+                    if(PosUsers.get(i).getName().equals(pos.getName())){
                         if((i+1) < PosUsers.size()){
                             posUser = PosUsers.get(i+1);
                             negUser = neg;
@@ -117,7 +116,7 @@ public class Calculation {
                     }
                 }
                 for(int i =0; i< NegUsers.size(); i++){
-                    if(NegUsers.get(i).getName() == neg.getName()){
+                    if(NegUsers.get(i).getName().equals(neg.getName())){
                         if((i+1) > NegUsers.size()){
                             negUser = NegUsers.get(i+1);
                             posUser = pos;
@@ -126,7 +125,7 @@ public class Calculation {
                     }
                 }
                 if(weiterNeg && weiterPos ) {
-                    test(negUser,posUser);
+                    callUserInvestment(negUser,posUser);
                 } else
                     return;
 
@@ -139,7 +138,7 @@ public class Calculation {
 
 
 
-    public int rechnen(UserAdapter pos, UserAdapter neg) {
+    public int calc(UserAdapter pos, UserAdapter neg) {
         double result;
         double postnegativInvestment=0;
         result = neg.getInvestment() + pos.getInvestment();
@@ -152,7 +151,7 @@ public class Calculation {
 
 
             for( int i = 0; i < NegUsers.size(); i++) {
-                if (NegUsers.get(i).getName()==(neg.getName())){
+                if (NegUsers.get(i).getName().equals(neg.getName())){
                     NegUsers.get(i).addInvestmentToUser(pos.getName(),neg.getInvestment() *(-1) );
                     postnegativInvestment= neg.getInvestment() *(-1);
                     NegUsers.get(i).setInvestment(0);
@@ -160,7 +159,7 @@ public class Calculation {
                 }
             }
             for( int i =0; i < PosUsers.size(); i++) {
-                if (PosUsers.get(i).getName() ==(pos.getName())){
+                if (PosUsers.get(i).getName().equals(pos.getName())){
                     PosUsers.get(i).addHabenToUser(neg.getName(),postnegativInvestment);
                     PosUsers.get(i).setInvestment(result);
                 }
