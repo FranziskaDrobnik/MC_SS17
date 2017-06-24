@@ -579,12 +579,14 @@ public class ShoppinglistActivity extends Activity {
                 conn.setRequestMethod("PUT");
                 conn.setRequestProperty("Content-Type", "application/json");
 
-                // TODO bzw Liste an Artikeln???
+                //User
+                GlobalObjects go = GlobalObjects.getInstance();
+
                 JSONObject credentials = new JSONObject();
                 try {
                     credentials.put("amount", price.replace('.',','));
                     credentials.put("reason", reason);
-                    credentials.put("user", "bla"); //TODO User einfügen
+                    credentials.put("user", go.getUsername());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
