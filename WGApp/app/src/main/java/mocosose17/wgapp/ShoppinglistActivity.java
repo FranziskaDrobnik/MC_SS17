@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -100,7 +101,14 @@ public class ShoppinglistActivity extends Activity {
 
                 try {
                     double d = Double.parseDouble(text);
-                    if (d==0) {
+                    Boolean itemChecked=false;
+                    for(int i=0;i<items.size();i++) {
+                        if (items.get(i).getBought()) {
+                            itemChecked = true;
+                            break;
+                        }
+                    }
+                    if (d==0 && itemChecked) {
                         ((EditText) findViewById(R.id.etPrice)).setHint("please enter price");//it gives user to hint
                         ((EditText) findViewById(R.id.etPrice)).setError("please enter price");//it gives user to info message //use any one //
                         return;
@@ -171,6 +179,7 @@ public class ShoppinglistActivity extends Activity {
         //LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.MarginLayoutParams., LinearLayout.LayoutParams.WRAP_CONTENT);
         item.layout = new LinearLayout(ShoppinglistActivity.this);
         item.layout.setOrientation(LinearLayout.VERTICAL);
+        item.layout.setBackground(ContextCompat.getDrawable(this, R.drawable.shoppinglistcustomborder));
         LinearLayout i = new LinearLayout(ShoppinglistActivity.this);
         i.addView(item.cbBought);
         i.addView(item.etAmount);
@@ -440,11 +449,25 @@ public class ShoppinglistActivity extends Activity {
         protected Void doInBackground(String... params) {
             URL url;
             try {
-                url = new URL("http://mc-wgapp.mybluemix.net/deleteArticleFromShoppinglist/" + URLEncoder.encode(item.getName(), "utf-8"));
+                //url = new URL("http://mc-wgapp.mybluemix.net/deleteArticleFromShoppinglist/" + URLEncoder.encode(item.getName(), "utf-8"));
+                url = new URL("http://mc-wgapp.mybluemix.net/deleteArticleFromShoppinglist");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestMethod("DELETE");
                 conn.setRequestProperty("Content-Type", "application/json");
+
+                JSONObject credentials = new JSONObject();
+                try {
+
+                    credentials.put("articleName", item.getName());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String str = credentials.toString();
+                byte[] outputBytes = str.getBytes("UTF-8");
+                OutputStream os = conn.getOutputStream();
+                os.write(outputBytes);
 
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     String line;
