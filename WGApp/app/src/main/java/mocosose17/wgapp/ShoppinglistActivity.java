@@ -521,6 +521,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
                     credentials.put("articleName", item.getName());
                     credentials.put("quantity", item.getAmount());
                     credentials.put("type", item.getUnitkind());
+                    credentials.put("category", item.getCategory());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
