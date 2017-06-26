@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">WGApp</string>
     <string name="speisekammer">Speisekammer</string>
-    <string name="speisekammerSearchTv">Nach Lebensmittel suchen</string>
+    <string name="speisekammerSearchTv">Search for an item</string>
     <string name="s_logout"><font color="red">Log out</font></string>
     <string name="title_activity_drawer">Drawer</string>
 
