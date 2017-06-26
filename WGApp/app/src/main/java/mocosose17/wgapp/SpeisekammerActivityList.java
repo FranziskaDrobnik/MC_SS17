@@ -1,15 +1,23 @@
 package mocosose17.wgapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v4.util.DebugUtils;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -53,6 +61,10 @@ public class SpeisekammerActivityList extends AppCompatActivity {
 
     public SpeisekammerCustomListAdapter scla;
 
+    private Toolbar toolbar;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+
     public void reload(){
         new SpecifiedItems(this).execute();
     }
@@ -68,6 +80,83 @@ public class SpeisekammerActivityList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speisekammer_list);
 
+
+        // Initializing Toolbar and setting it as the actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+        //Initializing NavigationView
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+            // This method will trigger on item Click of navigation menu
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+
+
+                switch (item.getItemId()) {
+
+                    case R.id.menu_logout: {
+                        //do somthing
+                        GlobalObjects go = GlobalObjects.getInstance();
+                        go.setUsername(null);
+                        Intent i = new Intent(SpeisekammerActivityList.this, MainActivity.class);
+                        startActivity(i);
+                        break;
+                    }
+                    case R.id.menu_investment: {
+                        //do somthing
+                        Intent i = new Intent(SpeisekammerActivityList.this, InvestmentActivity.class);
+                        startActivity(i);
+                        break;
+                    }
+                    case R.id.menu_pantry: {
+                        //do somthing
+                        Intent i = new Intent(SpeisekammerActivityList.this, SpeisekammerActivityStart.class);
+                        startActivity(i);
+                        break;
+                    }
+                    case R.id.menu_shoppinglist: {
+                        //do somthing
+                        Intent i = new Intent(SpeisekammerActivityList.this, ShoppinglistActivity.class);
+                        startActivity(i);
+                        break;
+                    }
+                }
+                //close navigation drawer
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+        // Initializing Drawer Layout and ActionBarToggle
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.openDrawer, R.string.closeDrawer){
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        //Setting the actionbarToggle to drawer layout
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        //calling sync state is necessay or else your hamburger icon wont show up
+        actionBarDrawerToggle.syncState();
+
+
+
         String category = "Default";
 
         Bundle extras = getIntent().getExtras();
@@ -79,6 +168,8 @@ public class SpeisekammerActivityList extends AppCompatActivity {
         }
 
         cat = category;
+        toolbar.setTitle(cat);
+        setSupportActionBar(toolbar);
 
         TextView catHeader = (TextView)findViewById(R.id.speisekammerListTv);
         catHeader.setText(category);
@@ -106,6 +197,29 @@ public class SpeisekammerActivityList extends AppCompatActivity {
         new SpecifiedItems(SpeisekammerActivityList.this).execute();
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
     class SpecifiedItems extends AsyncTask<String, Void, Void> {

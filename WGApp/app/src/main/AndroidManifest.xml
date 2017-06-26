@@ -19,7 +19,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".InvestmentActivity"></activity>
+        <activity android:name=".InvestmentActivity" />
+        <activity android:name=".SpeisekammerActivityStart" />
+        <activity android:name=".SpeisekammerActivityList" />
+        <activity android:name=".ShoppinglistActivity" />
     </application>
 
 </manifest>

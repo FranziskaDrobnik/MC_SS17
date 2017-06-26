@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -23,93 +24,87 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
     private EditText inputUsername;
     private EditText inputPassword;
-
+    private TextView txtUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //Remove title bar
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
         inputUsername = (EditText) findViewById(R.id.LoginUsername);
         inputPassword = (EditText) findViewById(R.id.LoginPassword);
+//        txtUser = (TextView) findViewById(R.id.txtUsername);
     }
 
 
     public void executeLogin(View view){
         String username = inputUsername.getText().toString();
         String password = inputPassword.getText().toString();
-//
-//        GlobalObjects globalObjs = GlobalObjects.getInstance();
-//        globalObjs.setUsername(username);
-//
-//        Log.e("USERinLogin", globalObjs.getUsername());
+
 
         new VerifyLogin(MainActivity.this).execute(username, password);
-
-//        GlobalObjects go = (GlobalObjects) getApplicationContext();
-//        String globalUser = go.getUsername();
     }
 
     public void noAccount(View view){
         Intent i = new Intent(this, RegisterActivity.class);
         startActivity(i);
     }
-}
-
-class VerifyLogin extends AsyncTask<String, Void, Void> {
-    public String response = "";
-    private Context context;
-    private String username;
-
-    protected VerifyLogin(Context context) {
-        this.context = context;
-    }
-
-    @Override
-    protected Void doInBackground(String... params) {
-        URL url;
-        try {
-            url = new URL("http://mc-wgapp.mybluemix.net/verifyUser");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
 
 
+    class VerifyLogin extends AsyncTask<String, Void, Void> {
+        public String response = "";
+        private Context context;
+        private String username;
 
-
-            JSONObject credentials = new JSONObject();
-            try {
-                credentials.put("username", params[0]);
-                credentials.put("password", params[1]);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            this.username = params[0];
-
-            String str = credentials.toString();
-            byte[] outputBytes = str.getBytes("UTF-8");
-            OutputStream os = conn.getOutputStream();
-            os.write(outputBytes);
-
-            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String line;
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line = br.readLine()) != null) {
-                    response += line;
-                }
-            } else {
-                response = "";
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        protected VerifyLogin(Context context) {
+            this.context = context;
         }
 
-        Log.d("RESPONSE", response);
+        @Override
+        protected Void doInBackground(String... params) {
+            URL url;
+            try {
+                url = new URL("http://mc-wgapp.mybluemix.net/verifyUser");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+
+
+
+
+                JSONObject credentials = new JSONObject();
+                try {
+                    credentials.put("username", params[0]);
+                    credentials.put("password", params[1]);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                this.username = params[0];
+
+                String str = credentials.toString();
+                byte[] outputBytes = str.getBytes("UTF-8");
+                OutputStream os = conn.getOutputStream();
+                os.write(outputBytes);
+
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    String line;
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    while ((line = br.readLine()) != null) {
+                        response += line;
+                    }
+                } else {
+                    response = "";
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Log.d("RESPONSE", response);
 
 
 //        try {
@@ -119,21 +114,23 @@ class VerifyLogin extends AsyncTask<String, Void, Void> {
 //        }
 
 
-        return null;
-    }
-
-    protected void onPostExecute(Void unused){
-        if(Boolean.valueOf(response)){
-            Toast.makeText(context,"login success",Toast.LENGTH_LONG).show();
-            GlobalObjects globalObjs = GlobalObjects.getInstance();
-            globalObjs.setUsername(username);
-
-            Log.e("USERinLogin", globalObjs.getUsername());
-            Intent i = new Intent(context, InvestmentActivity.class);
-                context.startActivity(i);
-        }else{
-            Toast.makeText(context,"login failed",Toast.LENGTH_LONG).show();
+            return null;
         }
+
+        protected void onPostExecute(Void unused){
+            if(Boolean.valueOf(response)){
+                Toast.makeText(context,"login success",Toast.LENGTH_LONG).show();
+                GlobalObjects globalObjs = GlobalObjects.getInstance();
+                globalObjs.setUsername(username);
+//                txtUser.setText(username);
+
+
+                Log.e("USERinLogin", globalObjs.getUsername());
+                Intent i = new Intent(context, ShoppinglistActivity.class);
+                context.startActivity(i);
+            }else{
+                Toast.makeText(context,"login failed",Toast.LENGTH_LONG).show();
+            }
 //        user1 = (TextView) findViewById(R.id.User1TextView);
 //
 //
@@ -151,7 +148,9 @@ class VerifyLogin extends AsyncTask<String, Void, Void> {
 //            e.printStackTrace();
 //        }
 
+        }
+
+
     }
-
-
 }
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+
+        <item
+            android:id="@+id/menu_shoppinglist"
+            android:checked="false"
+            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:title="Shopping List" />
+
+        <item
+            android:id="@+id/menu_pantry"
+            android:checked="false"
+            android:icon="@drawable/ic_restaurant_black_24dp"
+            android:title="Pantry" />
+
+        <item
+            android:id="@+id/menu_investment"
+            android:checked="false"
+            android:icon="@drawable/ic_attach_money_black_24dp"
+            android:title="Investment" />
+
+        <item
+            android:id="@+id/menu_logout"
+            android:checked="false"
+            android:icon="@drawable/ic_directions_run_black_24dp"
+            android:title="Logout" />
+
+
+
+    </group>
+</menu>
