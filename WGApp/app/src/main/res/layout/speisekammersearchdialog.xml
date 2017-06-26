@@ -13,7 +13,7 @@
         android:id="@+id/speisekammerSearchResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Suchergebnis"
+        android:text="Searchresult"
         android:textAlignment="center"
         android:textColor="@color/bg_register"
         android:textSize="18sp"
@@ -39,7 +39,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:padding="2dp"
-            android:text="Bezeichnung"
+            android:text="Name"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?attr/actionMenuTextColor" />
 
@@ -50,7 +50,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:padding="2dp"
-            android:text="Menge"
+            android:text="Amount"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textColor="?attr/actionMenuTextColor" />
 
@@ -62,7 +62,7 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:padding="2dp"
-            android:text="Kategorie"
+            android:text="Category"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textColor="?attr/actionMenuTextColor" />
 
@@ -73,7 +73,7 @@
         android:id="@+id/speisekammerToList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Zur Liste" />
+        android:text="To List" />
 
     <Space
         android:layout_width="match_parent"

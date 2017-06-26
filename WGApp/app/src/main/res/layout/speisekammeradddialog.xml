@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Bezeichnung"
+        android:hint="Name"
         android:inputType="text" />
 
     <EditText
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Menge"
+        android:hint="Amount"
         android:inputType="numberSigned|numberDecimal" />
 
     <EditText
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Mindestmenge"
+        android:hint="min Amount"
         android:inputType="numberSigned|numberDecimal" />
 
     <Spinner
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Hinzufügen"
+        android:text="Add"
         android:textAlignment="center" />
 
 </LinearLayout>

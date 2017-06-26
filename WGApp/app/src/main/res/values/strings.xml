@@ -22,23 +22,23 @@
 
 
     <string-array name="categories">
-        <item>Getränke</item>
-        <item>Backwaren</item>
-        <item>Tiefkühl</item>
-        <item>Kühlschrank</item>
-        <item>Früchte</item>
-        <item>Sonstiges</item>
-        <item>Teigwaren</item>
-        <item>Gemüse</item>
+        <item>Beverages</item>
+        <item>Pasteries</item>
+        <item>Freezer</item>
+        <item>Fridge</item>
+        <item>Fruits</item>
+        <item>Miscellaneous</item>
+        <item>Pasta</item>
+        <item>Vegetables</item>
     </string-array>
 
     <string-array name="categoriestyp">
         <item>Liter</item>
         <item>Gramm</item>
-        <item>Flasche</item>
-        <item>Kasten</item>
-        <item>Beutel</item>
-        <item>Stück</item>
+        <item>Bottle</item>
+        <item>Crate</item>
+        <item>Bag</item>
+        <item>Piece</item>
     </string-array>
 
 </resources>

@@ -137,15 +137,16 @@ public class SpeisekammerActivityStart extends AppCompatActivity{
 
                 String category = null;
                 Intent intent = new Intent(getApplicationContext(), SpeisekammerActivityList.class);
+                String cate[] = getResources().getStringArray(R.array.categories);
                 switch(position){
-                    case 0: category = "Getränke"; break;
-                    case 1: category = "Backwaren"; break;
-                    case 2: category = "Tiefkühl"; break;
-                    case 3: category = "Kühlschrank"; break;
-                    case 4: category = "Früchte"; break;
-                    case 5: category = "Sonstiges"; break;
-                    case 6: category = "Teigwaren"; break;
-                    case 7: category = "Gemüse"; break;
+                    case 0: category = cate[0]; break;
+                    case 1: category = cate[1]; break;
+                    case 2: category = cate[2]; break;
+                    case 3: category = cate[3]; break;
+                    case 4: category = cate[4]; break;
+                    case 5: category = cate[5]; break;
+                    case 6: category = cate[6]; break;
+                    case 7: category = cate[7]; break;
                     case 8: SpeisekammerAddDialog dialog = new SpeisekammerAddDialog();
                         FragmentManager fm = getFragmentManager();
                         dialog.show(fm, "Neuer Eintrag"); break;

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="Zur Einkaufsliste hinzufügen"
+        android:text="Add to Shoppinglist"
         android:textAlignment="center"
         android:textColor="@color/bg_register"
         android:textSize="18sp"
@@ -29,7 +29,7 @@
             android:id="@+id/speisekammerSDtv1"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Menge"
+            android:text="Amount"
             android:textStyle="bold" />
 
         <SeekBar
@@ -75,7 +75,7 @@
         android:layout_gravity="center"
         android:layout_marginRight="0dp"
         android:layout_marginTop="20dp"
-        android:text="Fertig" />
+        android:text="Done" />
 
     <Space
         android:layout_width="match_parent"

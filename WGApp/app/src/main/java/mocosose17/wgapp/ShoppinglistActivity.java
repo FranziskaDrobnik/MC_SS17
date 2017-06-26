@@ -291,7 +291,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
         item.etName = new EditText(ShoppinglistActivity.this);//(EditText) convertView.findViewById(R.id.etName);
         //neu
         item.spCategory = new Spinner(ShoppinglistActivity.this, Spinner.MODE_DROPDOWN);
-        final String[] categories = new String[]{"Sonstiges", "Getränke", "Backwaren", "Tiefkühl", "Kühlschrank", "Früchte", "Teigwaren", "Gemüse"};
+        final String[] categories = getResources().getStringArray(R.array.categories);
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(ShoppinglistActivity.this, android.R.layout.simple_spinner_dropdown_item, categories);
         item.spCategory.setAdapter(categoryAdapter);
         item.cbBought = new CheckBox(ShoppinglistActivity.this);//(CheckBox) convertView.findViewById(R.id.cbBought);
