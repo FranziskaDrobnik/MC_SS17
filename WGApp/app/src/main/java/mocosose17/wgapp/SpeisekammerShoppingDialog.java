@@ -91,10 +91,10 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
 
                 if(Integer.parseInt(((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString()) > 0){
                     new ShoppingItem(getActivity()).execute("LOOKUP", name, ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString(), type);
-                    Toast t = Toast.makeText(getActivity(), name+" wurde "+((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString()+" mal zur Einkaufslite hinzugefügt", Toast.LENGTH_SHORT);
+                    Toast t = Toast.makeText(getActivity(), name+" has "+((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString()+" times been added to the shoppinglist", Toast.LENGTH_SHORT);
                     t.show();
                 }else{
-                    Toast t = Toast.makeText(getActivity(),"Einkaufsliste bleibt unverändert", Toast.LENGTH_SHORT);
+                    Toast t = Toast.makeText(getActivity(),"Shoppinglist did not change", Toast.LENGTH_SHORT);
                     t.show();
                 }
 

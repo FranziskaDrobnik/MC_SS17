@@ -99,11 +99,11 @@ public class SpeisekammerChangeAmountDialog extends DialogFragment {
                 ((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).setText(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getHint());
                 if(Integer.parseInt(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getText().toString()) > 0){
                     if(Integer.parseInt(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getText().toString()) == ((SpeisekammerActivityList)getActivity()).scla.toChangeAmount){
-                        Toast t = Toast.makeText(getActivity(), "Menge unverändert", Toast.LENGTH_SHORT);
+                        Toast t = Toast.makeText(getActivity(), "Amount did not change", Toast.LENGTH_SHORT);
                         t.show();
                     }else{
                         new ChangeAmount(getActivity()).execute(((SpeisekammerActivityList)getActivity()).scla.toChangeName,((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getText().toString());
-                        Toast t = Toast.makeText(getActivity(), "Menge von "+ ((SpeisekammerActivityList)getActivity()).scla.toChangeName+" wurde angepasst", Toast.LENGTH_SHORT);
+                        Toast t = Toast.makeText(getActivity(), "Amount of "+ ((SpeisekammerActivityList)getActivity()).scla.toChangeName+" has been changed", Toast.LENGTH_SHORT);
                         t.show();
                         ((SpeisekammerActivityList)getActivity()).reload();
                     }

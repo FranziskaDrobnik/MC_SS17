@@ -71,7 +71,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
 
     public void delete(String item){
         new SpecifiedItems(this).execute(item);
-        Toast t = Toast.makeText(getApplicationContext(), item+" wurde aus der Kammer entfernt.", Toast.LENGTH_SHORT);
+        Toast t = Toast.makeText(getApplicationContext(), item+" has been deleted from the pantry.", Toast.LENGTH_SHORT);
         t.show();
     }
 
@@ -259,12 +259,23 @@ public class SpeisekammerActivityList extends AppCompatActivity {
             }else{
                 bdelete = true;
                 try {
-                    url = new URL("http://mc-wgapp.mybluemix.net/deleteArticleFromPantry/"+params[0]);
+                    url = new URL("http://mc-wgapp.mybluemix.net/deleteArticleFromPantry");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                     conn.setRequestMethod("DELETE");
                     conn.setRequestProperty("Content-Type", "application/json");
 
+                    JSONObject item = new JSONObject();
+                    try {
+                        item.put("articleName", params[0]);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    String str = item.toString();
+                    byte[] outputBytes = str.getBytes("UTF-8");
+                    OutputStream os = conn.getOutputStream();
+                    os.write(outputBytes);
 
                     if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         String line;

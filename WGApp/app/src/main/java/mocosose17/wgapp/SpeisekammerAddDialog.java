@@ -89,7 +89,7 @@ public class SpeisekammerAddDialog extends DialogFragment {
                 }catch (Exception e){
 
                 }
-                Toast t = Toast.makeText(getActivity(), pa1 +"x "+pa0+" wurde der Kammer hinzugefügt.", Toast.LENGTH_SHORT);
+                Toast t = Toast.makeText(getActivity(), pa1 +"x "+pa0+" has been added to pantry.", Toast.LENGTH_SHORT);
                 t.show();
                 getDialog().dismiss();
             }

@@ -282,7 +282,7 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
                     }
                 }
             }else{
-                Toast t = Toast.makeText(getContext(), params[0]+" wurde der Einkaufsliste hinzugefügt", Toast.LENGTH_SHORT);
+                Toast t = Toast.makeText(getContext(), params[0]+" has been added to the shoppinglist", Toast.LENGTH_SHORT);
                 t.show();
             }
 
