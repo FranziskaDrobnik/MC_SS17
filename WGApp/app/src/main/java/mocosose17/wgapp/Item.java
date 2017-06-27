@@ -37,6 +37,7 @@ public class Item {
     public Item(JSONObject itemObject){
         try {
             setUnitkind(itemObject.getString("type"));
+            setCategory(itemObject.getString("category"));
             setName(itemObject.getString("articleName"));
             setAmount(Integer.toString(itemObject.getInt("quantity")));
             newlyCreated = false;

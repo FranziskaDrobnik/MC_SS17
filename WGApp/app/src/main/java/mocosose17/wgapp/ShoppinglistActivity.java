@@ -256,6 +256,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
                             item.etAmount.setEnabled(false);
                             item.etName.setEnabled(false);
                             item.spUnitKind.setEnabled(false);
+                            item.spCategory.setEnabled(false);
                         } else if (item.getBought()) {
                             Log.d("","add to pantry");
                             new AddArticleToPantry(item).execute();
@@ -292,6 +293,9 @@ public class ShoppinglistActivity extends AppCompatActivity {
         //neu
         item.spCategory = new Spinner(ShoppinglistActivity.this, Spinner.MODE_DROPDOWN);
         final String[] categories = getResources().getStringArray(R.array.categories);
+        String tmp= categories[0];
+        categories[0]=categories[5];
+        categories[5]=tmp;
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(ShoppinglistActivity.this, android.R.layout.simple_spinner_dropdown_item, categories);
         item.spCategory.setAdapter(categoryAdapter);
         item.cbBought = new CheckBox(ShoppinglistActivity.this);//(CheckBox) convertView.findViewById(R.id.cbBought);
@@ -346,6 +350,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
             item.spUnitKind.setEnabled(false);
             item.etName.setEnabled(false);
             item.etAmount.setEnabled(false);
+            item.spCategory.setEnabled(false);
         } else {
             item.etAmount.addTextChangedListener(new TextWatcher() {
 
@@ -405,6 +410,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
         item.etAmount = null;
         item.etName = null;
         item.spUnitKind = null;
+        item.spCategory = null;
 
         items.remove(item);
     }
