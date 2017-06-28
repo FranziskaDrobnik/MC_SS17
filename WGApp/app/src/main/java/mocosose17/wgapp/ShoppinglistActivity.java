@@ -244,22 +244,33 @@ public class ShoppinglistActivity extends AppCompatActivity {
 
                     for (int i = 0; i < items.size(); i++) {
                         item = items.get(i);
+
                         if (item.getNewlyCreated() && item.getBought()) {
-                            new AddArticleToPantry(item).execute();
+                            //new AddArticleToPantry(item).execute();
+                            Log.d("addpantry", item.getName()+"\t"+item.getAmount()+"\t"+item.getUnitkind()+"\t"+item.getCategory());
+                            new CheckAmount(this).execute("LOOKUP", item.getName(), item.getAmount(), item.getUnitkind(), item.getCategory());
                             boughtItems++;
                             sb.append(item.getName());
                             i--;//sonst werdenb items übersprungen
                             removeItem(item);
                         } else if (item.getNewlyCreated()) {
+                            //prüft, ob item schon shoppinglist ist und wenn ja erhöht nur menge
+                            new SpeisekammerShoppingDialog().accessShoppingItem("LOOKUP",item.getName(),item.getAmount(),item.getUnitkind(),item.getCategory());
                             new AddArticleToShoppinglist(item).execute();
                             item.setNewlyCreated(false);
                             item.etAmount.setEnabled(false);
                             item.etName.setEnabled(false);
                             item.spUnitKind.setEnabled(false);
                             item.spCategory.setEnabled(false);
+                            finish();
+                            startActivity(getIntent());
+
                         } else if (item.getBought()) {
                             Log.d("","add to pantry");
-                            new AddArticleToPantry(item).execute();
+                            //prüft, ob item schon shoppinglist ist und wenn ja erhöht nur menge
+                            new SpeisekammerShoppingDialog().accessShoppingItem("LOOKUP",item.getName(),item.getAmount(),item.getUnitkind(),item.getCategory());
+                            //new AddArticleToPantry(item).execute();
+                            new CheckAmount(this).execute("LOOKUP", item.getName(), item.getAmount().toString(), item.getUnitkind().toString(), item.getCategory().toString());
                             new DeleteArticleFromShoppinglist(item).execute();
                             boughtItems++;
                             sb.append(item.getName());
@@ -427,6 +438,10 @@ public class ShoppinglistActivity extends AppCompatActivity {
          super.onPause();
      }
  */
+    public void accessAddToPantry(Item item){
+        new AddArticleToPantry(item).execute();
+    }
+
     class RegisterItems extends AsyncTask<String, Void, Void> {
         private String response = "";
 
@@ -634,6 +649,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... params) {
+            Log.d("test",item.getName()+"\t"+item.getAmount()+"\t"+item.getUnitkind()+"\t"+item.getCategory());
             URL url;
 
             try {
@@ -681,7 +697,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
 
         //Anzeige UI
         protected void onPostExecute(Void unused) {
-            //TODO ???
+
         }
     }
 
@@ -748,4 +764,110 @@ public class ShoppinglistActivity extends AppCompatActivity {
             //TODO
         }
     }
+    class CheckAmount extends AsyncTask<String, Void, Void> {
+        private String response = "";
+        private Context context;
+        private String[] param;
+
+        protected CheckAmount(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            URL url;
+            this.param=params;
+            Log.d("param", ""+param.length);
+            if(this.param[0].equals("LOOKUP")){
+                try {
+                    url = new URL("http://mc-wgapp.mybluemix.net/pantry");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Content-Type", "application/json");
+
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        String line;
+                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        while ((line = br.readLine()) != null) {
+                            response += line;
+                        }
+                    } else {
+                        response = "";
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if (this.param[0].equals("true")){
+                //wenn item existiert
+                try {
+                    url = new URL("http://mc-wgapp.mybluemix.net/changeQuantityInPantry");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json");
+
+                    JSONObject item = new JSONObject();
+                    //menge die ich ändere+amount aus db
+                    Integer newAmount = Integer.parseInt(param[2]+param[3]);
+                    try {
+                        item.put("articleName", params[0]);
+                        item.put("quantity", newAmount);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    String str = item.toString();
+                    byte[] outputBytes = str.getBytes("UTF-8");
+                    OutputStream os = conn.getOutputStream();
+                    os.write(outputBytes);
+
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        String line;
+                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        while ((line = br.readLine()) != null) {
+                            response += line;
+                        }
+                    } else {
+                        response = "";
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("RESPONSE", response);
+
+            }else if (this.param[0].equals("false")){
+
+                Item item= new Item();
+                item.setName(param[1]);
+                item.setAmount(param[2]);
+                item.setUnitkind(param[3]);
+                item.setCategory(param[4]);
+                accessAddToPantry(item);
+            }
+
+
+            return null;
+        }
+
+        protected void onPostExecute(Void unused) {
+            if (param[0].equals("LOOKUP") && response.length() > 5) {
+                try {
+                    JSONArray objects = new JSONArray(response);
+                    JSONObject o = objects.getJSONObject(0);
+                    new CheckAmount(getApplicationContext()).execute("true", o.getString("articleName"), param[2],o.getString("quantity"));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else{
+                new CheckAmount(getApplicationContext()).execute("false", param[1], param[2], param[3], param[4]);
+            }
+        }
+
+    }
+
 }
