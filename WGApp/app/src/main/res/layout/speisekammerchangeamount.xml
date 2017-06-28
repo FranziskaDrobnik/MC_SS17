@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="Ändere Menge"
+        android:text="Change Amount"
         android:textAlignment="center"
         android:textColor="@color/bg_register"
         android:textSize="18sp"
@@ -30,7 +30,7 @@
             android:id="@+id/speisekammerCAtv1"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Hinzufügen"
+            android:text="Add"
             android:textStyle="bold" />
 
         <SeekBar
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Momentane Menge"
+            android:text="Current Amount"
             android:textAlignment="textStart"
             android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
         android:layout_gravity="center"
         android:layout_marginRight="0dp"
         android:layout_marginTop="20dp"
-        android:text="Fertig" />
+        android:text="Done" />
 
     <Space
         android:layout_width="match_parent"

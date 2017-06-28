@@ -32,6 +32,8 @@ import java.net.URL;
 
 public class SpeisekammerChangeAmountDialog extends DialogFragment {
 
+    private boolean sliderMoved = false;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -73,6 +75,7 @@ public class SpeisekammerChangeAmountDialog extends DialogFragment {
         seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                sliderMoved = true;
                 if(((SpeisekammerActivityList)getActivity()).scla.toIncrease){
                     ((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).setHint(""+(((SpeisekammerActivityList)getActivity()).scla.toChangeAmount + progress));
                 }else{
@@ -96,7 +99,9 @@ public class SpeisekammerChangeAmountDialog extends DialogFragment {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).setText(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getHint());
+                    ((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).setText(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getHint());
+                }
+
                 if(Integer.parseInt(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getText().toString()) > 0){
                     if(Integer.parseInt(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getText().toString()) == ((SpeisekammerActivityList)getActivity()).scla.toChangeAmount){
                         Toast t = Toast.makeText(getActivity(), "Amount did not change", Toast.LENGTH_SHORT);

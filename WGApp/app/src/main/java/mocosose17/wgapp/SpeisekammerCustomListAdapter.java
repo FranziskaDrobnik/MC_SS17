@@ -230,6 +230,7 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
                         item.put("articleName", params[0]);
                         item.put("quantity", params[1]);
                         item.put("type", params[2]);
+                        item.put("category", params[3]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -276,7 +277,8 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
                         Integer desiredAmount = Integer.parseInt(obji.getString("minQuantity"));
                         Integer dif = desiredAmount - currentAmount;
                         String type = obji.getString("type");
-                        new ShoppingAdd(getContext()).execute(params[0], dif.toString(), type);
+                        String cate = obji.getString("category");
+                        new ShoppingAdd(getContext()).execute(params[0], dif.toString(), type, cate);
                     }catch (Exception e){
                         Log.d("Error adding to SL", e.toString());
                     }

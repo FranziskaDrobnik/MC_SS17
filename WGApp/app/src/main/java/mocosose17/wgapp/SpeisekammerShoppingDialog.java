@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import java.net.URL;
 
 public class SpeisekammerShoppingDialog extends DialogFragment {
 
+    private boolean sliderMoved = false;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -52,8 +55,9 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
         final String name = ((SpeisekammerActivityList)getActivity()).scla.toChangeName;
         final Integer amount = ((SpeisekammerActivityList)getActivity()).scla.toChangeAmount;
         final String type = ((SpeisekammerActivityList)getActivity()).scla.toChangeType;
+        final String category = ((SpeisekammerActivityList)getActivity()).cat;
 
-        ((TextView)getDialog().findViewById(R.id.speisekammerSDTitle)).setText(name + " zur Einkaufsliste hinzufügen");
+        ((TextView)getDialog().findViewById(R.id.speisekammerSDTitle)).setText(name + " add to shoppinglist");
         ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).setHint("0");
         ((TextView)getDialog().findViewById(R.id.speisekammerSDType)).setText(type);
 
@@ -70,6 +74,7 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).setHint(""+ progress);
+                sliderMoved = true;
             }
 
             @Override
@@ -87,10 +92,12 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).setText(((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getHint());
+                if(sliderMoved){
+                    ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).setText(((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getHint());
+                }
 
                 if(Integer.parseInt(((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString()) > 0){
-                    new ShoppingItem(getActivity()).execute("LOOKUP", name, ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString(), type);
+                    new ShoppingItem(getActivity()).execute("LOOKUP", name, ((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString(), type, category);
                     Toast t = Toast.makeText(getActivity(), name+" has "+((TextView)getDialog().findViewById(R.id.speisekammerSDAmount)).getText().toString()+" times been added to the shoppinglist", Toast.LENGTH_SHORT);
                     t.show();
                 }else{
@@ -117,7 +124,9 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
         protected Void doInBackground(String... params) {
             this.params = params;
             URL url;
-
+            for(int i = 0; i < this.params.length; i++){
+                Log.d("Param",this.params[i]);
+            }
             if(params.length > 0 && params[0].equals("LOOKUP")){
                 try {
                     url = new URL("http://mc-wgapp.mybluemix.net/shoppinglist/"+params[1]);
@@ -154,6 +163,7 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
                         item.put("articleName", params[1]);
                         item.put("quantity", params[2]);
                         item.put("type", params[3]);
+                        item.put("category", params[4]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -186,12 +196,14 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
                     conn.setRequestMethod("POST");
                     conn.setRequestProperty("Content-Type", "application/json");
 
-                    Integer newQuantity = Integer.parseInt(params[3]) + Integer.parseInt(params[2]);
+                    Integer newQuantity = Integer.parseInt(params[4]) + Integer.parseInt(params[2]);
 
                     JSONObject item = new JSONObject();
                     try {
                         item.put("articleName", params[1]);
                         item.put("quantity", newQuantity);
+                        item.put("type", params[3]);
+                        item.put("category", params[4]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -229,12 +241,12 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
                     try{
                         JSONArray dbitems = new JSONArray(response);
                         JSONObject obji = dbitems.getJSONObject(0);
-                        new ShoppingItem(getActivity()).execute("EXIST_TRUE", params[1], params[2], obji.getString("quantity"));
+                        new ShoppingItem(getActivity()).execute("EXIST_TRUE", params[1], params[2], params[3], obji.getString("quantity"), obji.getString("category"));
                     }catch (Exception e){
 
                     }
                 }else{
-                    new ShoppingItem(getActivity()).execute("EXIST_FALSE", params[1], params[2], params[3]);
+                    new ShoppingItem(getActivity()).execute("EXIST_FALSE", params[1], params[2], params[3], params[4]);
                 }
             }
         }
