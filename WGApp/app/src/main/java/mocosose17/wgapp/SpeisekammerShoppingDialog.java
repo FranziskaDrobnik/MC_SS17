@@ -111,7 +111,7 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
 
     }
 
-    class ShoppingItem extends AsyncTask<String, Void, Void> {
+    public class ShoppingItem extends AsyncTask<String, Void, Void> {
         private String response = "";
         private Context context;
         private String[] params;
