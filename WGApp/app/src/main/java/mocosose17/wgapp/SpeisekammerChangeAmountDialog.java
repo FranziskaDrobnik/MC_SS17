@@ -99,6 +99,7 @@ public class SpeisekammerChangeAmountDialog extends DialogFragment {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(sliderMoved){
                     ((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).setText(((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).getHint());
                 }
 
