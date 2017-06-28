@@ -35,6 +35,10 @@ public class SpeisekammerShoppingDialog extends DialogFragment {
 
     private boolean sliderMoved = false;
 
+    public void accessShoppingItem(String call, String name, String amount, String type, String category){
+        new ShoppingItem(getActivity()).execute(call, name, amount, type, category);
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
