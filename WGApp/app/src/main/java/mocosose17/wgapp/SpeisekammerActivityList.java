@@ -80,10 +80,22 @@ public class SpeisekammerActivityList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speisekammer_list);
 
+        String category = "Default";
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            category = extras.getString("STRING_CATEGORY");
+            if(extras.size() > 1){
+                highlight = extras.getString("SEARCHRESULT");
+            }
+        }
+
+        cat = category;
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        toolbar.setTitle(cat);
+        setSupportActionBar(toolbar);
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -157,19 +169,8 @@ public class SpeisekammerActivityList extends AppCompatActivity {
 
 
 
-        String category = "Default";
 
-        Bundle extras = getIntent().getExtras();
-        if(extras != null){
-            category = extras.getString("STRING_CATEGORY");
-            if(extras.size() > 1){
-                highlight = extras.getString("SEARCHRESULT");
-            }
-        }
 
-        cat = category;
-        toolbar.setTitle(cat);
-        setSupportActionBar(toolbar);
 
         TextView catHeader = (TextView)findViewById(R.id.speisekammerListTv);
         catHeader.setText(category);
