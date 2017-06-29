@@ -32,12 +32,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 
+/**
+ * Landing Activity for the pantry
+ * @author Sebastian Stumm
+ * @version 1.0
+ */
 public class SpeisekammerActivityStart extends AppCompatActivity{
 
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
 
+    /**
+     * Called when the Activity is created.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,10 +129,11 @@ public class SpeisekammerActivityStart extends AppCompatActivity{
         actionBarDrawerToggle.syncState();
 
 
-
+        // initialize search view and make so the hint shows
         SearchView sv = (SearchView) findViewById(R.id.speisekammerSearch);
         sv.setIconifiedByDefault(false);
 
+        // Grid view of the categories with images from drawable. Setting Adapter.
         GridView gridview = (GridView) findViewById(R.id.speisekammerGrid);
         TypedArray ta = getResources().obtainTypedArray(R.array.speisekammerImgIds);
         Integer[] imgid = new Integer[ta.length()];
@@ -132,6 +142,8 @@ public class SpeisekammerActivityStart extends AppCompatActivity{
         }
         gridview.setAdapter(new SpeisekammerImageAdapter(this, imgid));
 
+        // Listen for click on each element of the grid view and set category according to the icon clicked.
+        // If the plus sign is clicked a new Dialog Fragment is created which allows to add a new item to the pantry.
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
@@ -160,7 +172,7 @@ public class SpeisekammerActivityStart extends AppCompatActivity{
             }
         });
 
-
+        // Set Listener to the search view and create a new Dialog Fragment if the user pressed search.
         SearchView search = (SearchView) findViewById(R.id.speisekammerSearch);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 

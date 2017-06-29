@@ -247,7 +247,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
 
                         if (item.getNewlyCreated() && item.getBought()) {
                             //new AddArticleToPantry(item).execute();
-                            Log.d("addpantry", item.getName()+"\t"+item.getAmount()+"\t"+item.getUnitkind()+"\t"+item.getCategory());
+                            //Log.d("addpantry", item.getName()+"\t"+item.getAmount()+"\t"+item.getUnitkind()+"\t"+item.getCategory());
                             new CheckAmount(this).execute("LOOKUP", item.getName(), item.getAmount(), item.getUnitkind(), item.getCategory());
                             boughtItems++;
                             sb.append(item.getName());
@@ -297,7 +297,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
         items.add(item);
         item.etAmount = new EditText(ShoppinglistActivity.this);//(EditText) convertView.findViewById(R.id.etAmount);
         item.spUnitKind = new Spinner(ShoppinglistActivity.this, Spinner.MODE_DROPDOWN);
-        final String[] unitkinds = new String[]{"Stk", "g", "kg", "ml", "l"};
+        final String[] unitkinds = getResources().getStringArray(R.array.categoriestyp);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(ShoppinglistActivity.this, android.R.layout.simple_spinner_dropdown_item, unitkinds);
         item.spUnitKind.setAdapter(adapter);
         item.etName = new EditText(ShoppinglistActivity.this);//(EditText) convertView.findViewById(R.id.etName);
@@ -323,8 +323,12 @@ public class ShoppinglistActivity extends AppCompatActivity {
         item.layout.addView(item.etName);
         item.layout.addView(i);
 
+        if(item.getNewlyCreated()){
+            listView.addView(item.layout, 0);
+        }else{
+            listView.addView(item.layout);
+        }
 
-        listView.addView(item.layout);
 
         item.etName.setText(item.getName());
         item.cbBought.setChecked(item.getBought());
@@ -777,10 +781,9 @@ public class ShoppinglistActivity extends AppCompatActivity {
         protected Void doInBackground(String... params) {
             URL url;
             this.param=params;
-            Log.d("param", ""+param.length);
             if(this.param[0].equals("LOOKUP")){
                 try {
-                    url = new URL("http://mc-wgapp.mybluemix.net/pantry");
+                    url = new URL("http://mc-wgapp.mybluemix.net/pantry/"+param[1]);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                     conn.setRequestMethod("GET");
@@ -810,14 +813,14 @@ public class ShoppinglistActivity extends AppCompatActivity {
 
                     JSONObject item = new JSONObject();
                     //menge die ich ändere+amount aus db
-                    Integer newAmount = Integer.parseInt(param[2]+param[3]);
+                    Integer newAmount = Integer.parseInt(param[2]) + Integer.parseInt(param[3]);
                     try {
-                        item.put("articleName", params[0]);
-                        item.put("quantity", newAmount);
+                        item.put("articleName", params[1]);
+                        item.put("quantity", newAmount.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
+                    Log.d("JSON TO ADD", item.toString());
                     String str = item.toString();
                     byte[] outputBytes = str.getBytes("UTF-8");
                     OutputStream os = conn.getOutputStream();
@@ -855,6 +858,7 @@ public class ShoppinglistActivity extends AppCompatActivity {
 
         protected void onPostExecute(Void unused) {
             if (param[0].equals("LOOKUP") && response.length() > 5) {
+                Log.d("CHANGE AMOUNT OF", param[1]);
                 try {
                     JSONArray objects = new JSONArray(response);
                     JSONObject o = objects.getJSONObject(0);
@@ -863,7 +867,8 @@ public class ShoppinglistActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else{
+            }else if(param[0].equals("LOOKUP")){
+                Log.d("ADD NEW ITEM", param[1]);
                 new CheckAmount(getApplicationContext()).execute("false", param[1], param[2], param[3], param[4]);
             }
         }

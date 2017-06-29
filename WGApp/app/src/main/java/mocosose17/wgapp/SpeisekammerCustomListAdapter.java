@@ -28,10 +28,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by Sebastian on 18.06.2017.
- */
 
+/**
+ * Custom adapter class for the list view in the pantry
+ * @author Sebastian Stumm
+ * @version 1.0
+ */
 public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;

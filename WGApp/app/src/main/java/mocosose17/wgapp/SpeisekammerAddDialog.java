@@ -27,7 +27,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Sebastian on 18.06.2017.
+ * Dialog for adding a new item
+ * @author Sebastian Stumm
+ * @version 1.0
  */
 
 public class SpeisekammerAddDialog extends DialogFragment {
@@ -38,6 +40,11 @@ public class SpeisekammerAddDialog extends DialogFragment {
     public TextView mindm;
     public Spinner cate;
 
+    /**
+     * Called when the Dialog is created
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -50,6 +57,9 @@ public class SpeisekammerAddDialog extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Called when the Dialog has been created. Handles the listener and values of the elements in the dialog
+     */
     @Override
     public void onStart(){
         super.onStart();
@@ -96,6 +106,11 @@ public class SpeisekammerAddDialog extends DialogFragment {
 
     }
 
+    /**
+     * Backend class of the dialog which communicates with the database
+     * @author Sebastian Stumm
+     * @version 1.0
+     */
     class AddItems extends AsyncTask<String, Void, Void> {
         private String response = "";
         private Context context;
@@ -108,6 +123,7 @@ public class SpeisekammerAddDialog extends DialogFragment {
         protected Void doInBackground(String... params) {
             URL url;
             try {
+                // Add an article to the database
                 url = new URL("http://mc-wgapp.mybluemix.net/addArticleToPantry");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 

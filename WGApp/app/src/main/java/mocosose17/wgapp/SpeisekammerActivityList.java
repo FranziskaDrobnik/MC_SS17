@@ -43,7 +43,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+/**
+ * Class for the list for a category.
+ * @author Sebastian Stumm
+ * @version 1.0
+ */
 public class SpeisekammerActivityList extends AppCompatActivity {
 
     public ArrayList<String> itemname = new ArrayList<String>();
@@ -65,16 +69,27 @@ public class SpeisekammerActivityList extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
 
+    /**
+     * Can be called to reload the list
+     */
     public void reload(){
         new SpecifiedItems(this).execute();
     }
 
+    /**
+     * Can be called to delete an item from the list
+     * @param item item to delete
+     */
     public void delete(String item){
         new SpecifiedItems(this).execute(item);
         Toast t = Toast.makeText(getApplicationContext(), item+" has been deleted from the pantry.", Toast.LENGTH_SHORT);
         t.show();
     }
 
+    /**
+     * On creation of the activity this method is called. It Checks the Intent for extras and sets the category to the value of the STRING_CATEGORY extra.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,10 +186,11 @@ public class SpeisekammerActivityList extends AppCompatActivity {
 
 
 
-
+        // Set title to category name
         TextView catHeader = (TextView)findViewById(R.id.speisekammerListTv);
         catHeader.setText(category);
 
+        // prepare Adapter
         in = itemname.toArray(new String[itemname.size()]);
         am = amount.toArray(new String[amount.size()]);
         mam = mamount.toArray(new String[mamount.size()]);
@@ -183,6 +199,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
         lv = (ListView)findViewById(R.id.speisekammerList);
         lv.setAdapter(scla);
 
+        // Button makes a new DialogFragment to add a new item
         Button add = (Button)findViewById(R.id.speisekammerListAddButton);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +211,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
 
         });
 
-
+        // get pantry items
         new SpecifiedItems(SpeisekammerActivityList.this).execute();
 
     }
@@ -222,7 +239,11 @@ public class SpeisekammerActivityList extends AppCompatActivity {
     }
 
 
-
+    /**
+     * @author Sebastian Stummm
+     * @version 1.0
+     * Backend of the Activity working with the database.
+     */
     class SpecifiedItems extends AsyncTask<String, Void, Void> {
         private String response = "";
         private Context context;
@@ -238,6 +259,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
             if(params.length <= 0){
                 bdelete = false;
                 try {
+                    // Get the every item in pantry
                     url = new URL("http://mc-wgapp.mybluemix.net/pantry");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -260,6 +282,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
             }else{
                 bdelete = true;
                 try {
+                    // Delete single item from pantry
                     url = new URL("http://mc-wgapp.mybluemix.net/deleteArticleFromPantry");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -307,6 +330,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
                     amount.clear();
                     mamount.clear();
                     type.clear();
+                    // fill the lists with database items
                     for(int i = 0; i < dbitems.length(); i++){
                         JSONObject obji = (JSONObject)dbitems.get(i);
                         if(obji.getString("category").equals(cat)){
@@ -320,6 +344,7 @@ public class SpeisekammerActivityList extends AppCompatActivity {
                     reload();
                 }
 
+                // renew the adapter with the items from the database
                 if(itemname.size() >= 0){
                     in = itemname.toArray(new String[itemname.size()]);
                     am = amount.toArray(new String[amount.size()]);
