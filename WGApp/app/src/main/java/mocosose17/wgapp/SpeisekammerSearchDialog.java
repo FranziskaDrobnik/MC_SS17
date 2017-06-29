@@ -27,11 +27,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Sebastian on 19.06.2017.
+ * Dialog shows the search result
+ * @author Sebastian Stumm
+ * version 1.0
  */
-
 public class SpeisekammerSearchDialog extends DialogFragment {
 
+    /**
+     * Called when Activity is created
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -46,6 +52,9 @@ public class SpeisekammerSearchDialog extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Sets the button listener and the category name and search result in the extras
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -63,6 +72,9 @@ public class SpeisekammerSearchDialog extends DialogFragment {
         });
     }
 
+    /**
+     * Backend class for checking if the searched item exists
+     */
     class SearchItems extends AsyncTask<String, Void, Void> {
         private String response = "";
         private Context context;
@@ -76,6 +88,7 @@ public class SpeisekammerSearchDialog extends DialogFragment {
             URL url;
             if(!params[0].equals("DELETE")){
                 try {
+                    // check if item is in the pantry
                     url = new URL("http://mc-wgapp.mybluemix.net/pantry/"+params[0]);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -109,13 +122,15 @@ public class SpeisekammerSearchDialog extends DialogFragment {
         }
 
         protected void onPostExecute(Void unused) {
+            // Search failed
             if(response.length() < 5){
                 getDialog().findViewById(R.id.speisekammerToList).setEnabled(false);
-                ((TextView)getDialog().findViewById(R.id.speisekammerSearchResult)).setText("Suche ergab keine Treffer");
+                ((TextView)getDialog().findViewById(R.id.speisekammerSearchResult)).setText("No item found");
                 ((TextView)getDialog().findViewById(R.id.speisekammerItem)).setText("");
                 ((TextView)getDialog().findViewById(R.id.speisekammerAmount)).setText("");
                 ((TextView)getDialog().findViewById(R.id.speisekammerSDTypeTv)).setText("");
             }else{
+                // Search successful, set values of elements and enable to list button
                 try {
                     JSONArray dbitems = new JSONArray(response);
                     JSONObject obji = dbitems.getJSONObject(0);

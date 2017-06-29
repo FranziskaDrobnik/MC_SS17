@@ -47,6 +47,14 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
     public String toChangeType = "";
     public boolean toIncrease = true;
 
+    /**
+     * Constructor sets the needed variables for the custom list
+     * @param context the Activity
+     * @param itemname names of the items
+     * @param amount quantity of the items
+     * @param mamount minQuantity of the items
+     * @param type types of the items
+     */
     public SpeisekammerCustomListAdapter(Activity context, String[] itemname, String[] amount, String[] mamount, String[] type){
 
         super(context, R.layout.speisekammerlistelement, itemname);
@@ -58,6 +66,13 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
         this.type = type;
     }
 
+    /**
+     * Sets the view
+     * @param position current position
+     * @param view current view
+     * @param parent parrent view
+     * @return
+     */
     public View getView(int position, View view, ViewGroup parent) {
 
         final LayoutInflater inflater = context.getLayoutInflater();
@@ -159,6 +174,9 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
 
     }
 
+    /**
+     * Backend class for the list elements. Communicates with the database
+     */
     class ShoppingAdd extends AsyncTask<String, Void, Void> {
         private String response = "";
         private Context context;
@@ -172,9 +190,10 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
         protected Void doInBackground(String... params) {
             this.params = params;
             URL url;
-
+            // params influences the database call
             if(params.length == 1){
                 try {
+                    // get single item from the shopping list to check if it exists
                     url = new URL("http://mc-wgapp.mybluemix.net/shoppinglist/"+params[0]);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -196,6 +215,7 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
                 }
 
                 Log.d("RESPONSE", response);
+            // check if item is in pantry
             }else  if(params.length == 2 && params[1].equals("pantry") ){
                 try {
                     url = new URL("http://mc-wgapp.mybluemix.net/pantry/"+params[0]);
@@ -219,6 +239,7 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
                 }
 
                 Log.d("RESPONSE", response);
+            // add article to shopping list
             }else{
                 try {
                     url = new URL("http://mc-wgapp.mybluemix.net/addArticleToShoppinglist");
@@ -265,6 +286,7 @@ public class SpeisekammerCustomListAdapter extends ArrayAdapter<String> {
         }
 
         protected void onPostExecute(Void unused) {
+            // Check the params and response to decide what action is required
             if(params.length == 1){
                 if(response.length() < 5){
                     new ShoppingAdd(getContext()).execute(params[0], "pantry");
