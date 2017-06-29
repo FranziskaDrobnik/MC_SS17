@@ -51,9 +51,9 @@ public class SpeisekammerChangeAmountDialog extends DialogFragment {
     public void onStart() {
         super.onStart();
         if(((SpeisekammerActivityList)getActivity()).scla.toIncrease){
-            ((TextView)getDialog().findViewById(R.id.speisekammerCATitle)).setText("Bestand von " + ((SpeisekammerActivityList)getActivity()).scla.toChangeName + " erhöhen");
+            ((TextView)getDialog().findViewById(R.id.speisekammerCATitle)).setText("Increase Amount of " + ((SpeisekammerActivityList)getActivity()).scla.toChangeName);
         }else{
-            ((TextView)getDialog().findViewById(R.id.speisekammerCATitle)).setText("Bestand von " + ((SpeisekammerActivityList)getActivity()).scla.toChangeName + " veringern");
+            ((TextView)getDialog().findViewById(R.id.speisekammerCATitle)).setText("Decrease Amount of " + ((SpeisekammerActivityList)getActivity()).scla.toChangeName);
         }
         ((TextView)getDialog().findViewById(R.id.speisekammerCAAmount)).setHint(""+((SpeisekammerActivityList)getActivity()).scla.toChangeAmount);
         ((TextView)getDialog().findViewById(R.id.speisekammerCAType)).setText(((SpeisekammerActivityList)getActivity()).scla.toChangeType);
