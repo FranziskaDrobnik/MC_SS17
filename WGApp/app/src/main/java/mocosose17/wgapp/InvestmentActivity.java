@@ -43,7 +43,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Klasse zur Anzeige der Investments der User
+ * Grüne Zahlen  stellen den Betrag und den User dar, wenn der eingeloggte User Geld von bestimmten
+ * Usern bekommt.
+ * in Rote Zahlen  stellen den Betrag und den User dar, wenn der eingeloggte User bestimmten
+ * Usern Geld schuldet.
+ * Es kann ein kassensturz germacht werden, dann werden alle einträge im investment gelöscht.
+ *
+ */
 public class InvestmentActivity extends AppCompatActivity {
 
 
@@ -72,7 +80,8 @@ public class InvestmentActivity extends AppCompatActivity {
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
+        //Setting Navigation View Item Selected Listener to handle the
+        // item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
              // This method will trigger on item Click of navigation menu
@@ -98,7 +107,8 @@ public class InvestmentActivity extends AppCompatActivity {
                      }
                      case R.id.menu_pantry: {
                          //do somthing
-                         Intent i = new Intent(InvestmentActivity.this, SpeisekammerActivityStart.class);
+                         Intent i = new Intent(InvestmentActivity.this,
+                                 SpeisekammerActivityStart.class);
                          startActivity(i);
                          break;
                      }
@@ -117,17 +127,20 @@ public class InvestmentActivity extends AppCompatActivity {
 
         // Initializing Drawer Layout and ActionBarToggle
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.openDrawer, R.string.closeDrawer){
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,
+                R.string.openDrawer, R.string.closeDrawer){
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                // Code here will be triggered once the drawer closes as we dont want
+                // anything to happen so we leave this blank
                 super.onDrawerClosed(drawerView);
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                // Code here will be triggered once the drawer open as we dont
+                // want anything to happen so we leave this blank
 
                 super.onDrawerOpened(drawerView);
             }
@@ -441,7 +454,10 @@ public class InvestmentActivity extends AppCompatActivity {
 
     }
 
-    // Eintragen der Beträge und des Grundes in die Datenbank
+    /**
+     *   KLasse zum  Eintragen der Beträge und des Grundes in die Datenbank.
+     */
+
     private class ExecutePostMethod extends AsyncTask<String,Void, Void> {
 
         @Override

@@ -68,7 +68,7 @@
                         android:id="@+id/ButtonInsert"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="20dip"
+                        android:padding="15dip"
                         android:text="insert" />
                 </TableRow>
 

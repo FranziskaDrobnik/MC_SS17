@@ -3,8 +3,15 @@ package mocosose17.wgapp;
 
 import java.util.ArrayList;
 
+/**
+ * Klasse zur Berechnung des Investments der User
+ */
 public class Calculation {
+
+    //sammelt alle User mit positiven Ausgaben (Haben)
     private ArrayList<UserAdapter> PosUsers= new ArrayList<UserAdapter>();
+
+    //sammelt alle User mit negativen Ausgaben (Schulden)
     private ArrayList <UserAdapter> NegUsers= new ArrayList<UserAdapter>();
 
 
@@ -29,19 +36,30 @@ public class Calculation {
     }
 
 
+    /**
+     * Bekommt alle User der App in einer ArrayList. Berechnet die Summe aller Ausgaben
+     * der User und teilt sie durch die Anzahl der User (sum).
+     * Danach wird von jedem einzelnen User die Ausgabe - sum berechnet und zum User hinzugefügt.
+     * Ist das Ergebnis negativ wird der User zur Arraylist NegUsers hinzugefügt.
+     * Ist es positiv wird er zu PosUsers hinzugefügt
+     * @param users
+     * @return alle User mit den Berechnetetn Werten des
+     *         Investments in user.getUsersSchulden bzw getUsersHaben.
+     */
     public ArrayList<UserAdapter> setzeWerte(ArrayList <UserAdapter> users){
 
 
 
-        // Ausrechnen der Gesamtsumme
+        // Ausrechnen der Summe der Ausgaben aller User und teilen durch die Anzahl der User
         double sum = 0;
         for(int i =0; i< users.size(); i++) {
             sum += users.get(i).getFistEdition();
         }
         double output = sum/users.size();
 
+        // setzen der positiven oder negativen Ausgaben der einzelnen User und zuteilen in die Liste.
         for(int i =0; i< users.size(); i++) {
-            users.get(i).setInvestment(users.get(i).getFistEdition()-output);
+            users.get(i).setInvestment(users.get(i).getFistEdition()- output);
             if (users.get(i).getInvestment() < 0){
                 users.get(i).setPositiv(false);
                 NegUsers.add(users.get(i));
@@ -52,9 +70,10 @@ public class Calculation {
         }
 
 
-
-
+        // Aufrufen der eigentlichen Berechnung des Investments
         callUserInvestment(PosUsers.get(0),NegUsers.get(0));
+
+        // alle User mit den richtigen investment werten in eine Arraylist schreiben und zurück geben.
         ArrayList <UserAdapter>  alleUser = new ArrayList<UserAdapter>();
         for (int i = 0; i< PosUsers.size(); i++) {
             alleUser.add(PosUsers.get(i));
@@ -67,7 +86,11 @@ public class Calculation {
 
     }
 
-
+    /**
+     *
+     * @param pos User mit investment Haben
+     * @param neg User mit investment schulden
+     */
     public void callUserInvestment(UserAdapter pos,UserAdapter neg){
 
         int result = calc(pos, neg);
@@ -78,12 +101,13 @@ public class Calculation {
         boolean weiterNeg = false;
 
         switch (result){
-            case 1: result = 1;
-
+            case 1:
+                // weiter mit NegUser Zahl. PosUser bleibt
                 for(int i =0; i< NegUsers.size(); i++){
                     if(NegUsers.get(i).getName().equals(neg.getName())) {
                         if (i + 1 < NegUsers.size()) {
                             negUser = NegUsers.get(i + 1);
+                            // erneuter Aufruf der funktion mit den nächsten Usern
                             callUserInvestment(pos, negUser);
                         }
                     }
@@ -92,11 +116,13 @@ public class Calculation {
 
                 break;
 
-            case 2: result = 2;
+            case 2:
+                // weiter mit PosUser, NegUser bleibt.
                 for(int i =0; i< PosUsers.size(); i++){
                     if(PosUsers.get(i).getName().equals(pos.getName())){
                         if (i + 1 < PosUsers.size()) {
                             posUser = PosUsers.get(i + 1);
+                            // erneuter Aufruf der funktion mit den nächsten Usern
                             callUserInvestment(posUser, neg);
                         }
                     }
@@ -104,8 +130,8 @@ public class Calculation {
                 }
                 break;
 
-            case 3: result = 3;
-
+            case 3:
+                // weiter mit PosUser und NegUser.
                 for(int i =0; i< PosUsers.size(); i++){
                     if(PosUsers.get(i).getName().equals(pos.getName())){
                         if((i+1) < PosUsers.size()){
@@ -125,6 +151,7 @@ public class Calculation {
                     }
                 }
                 if(weiterNeg && weiterPos ) {
+                    // erneuter Aufruf der funktion mit den nächsten Usern
                     callUserInvestment(negUser,posUser);
                 } else
                     return;
@@ -136,20 +163,27 @@ public class Calculation {
     }
 
 
-
-
-    public int calc(UserAdapter pos, UserAdapter neg) {
+    /**
+     * Berechnung des investments der User und Eintragen der Ergebnisse zu den Usern
+     * @param pos
+     * @param neg
+     * @return
+     */
+    private int calc(UserAdapter pos, UserAdapter neg) {
         double result;
         double postnegativInvestment=0;
+
+        // Das Investment der positven Users wird abgezogen vom Negativen User
         result = neg.getInvestment() + pos.getInvestment();
 
         if (result > 0){
-            // weiter mit negativen Zahl.Positive Zahl bleibt
+
             System.out.println("if > 0 " + pos.getName()+ pos.getInvestment() + neg.getName() + neg.getInvestment());
             System.out.println("result 1 :" + result);
 
 
-
+            // Beim Negativen User wird das investment und der Name des Positiven Users
+            // in die Liste der Schulden eingetragen-
             for( int i = 0; i < NegUsers.size(); i++) {
                 if (NegUsers.get(i).getName().equals(neg.getName())){
                     NegUsers.get(i).addInvestmentToUser(pos.getName(),neg.getInvestment() *(-1) );
@@ -158,21 +192,25 @@ public class Calculation {
 
                 }
             }
+            // Beim Positiven User wird der Name und das Investment des
+            // Negativen Users in die Liste des Habens eingetragen-
             for( int i =0; i < PosUsers.size(); i++) {
                 if (PosUsers.get(i).getName().equals(pos.getName())){
                     PosUsers.get(i).addHabenToUser(neg.getName(),postnegativInvestment);
                     PosUsers.get(i).setInvestment(result);
                 }
             }
-            return 1;
+            return 1; // weiter mit negativen User. Positiver User bleibt.
 
 
         } if (result < 0) {
-            // weiter mit Positiven Zahl negative Zahl bleibt.
+
 
             System.out.println("if < 0 " + pos.getName()+ pos.getInvestment() + neg.getName() + neg.getInvestment());
             System.out.println("result2: " + result);
 
+            // Beim negativen User wird der Name und das Investment
+            // des positiven users in die Liste der Schulden eingetragen.
             for( int i =0; i < NegUsers.size(); i++) {
                 if (NegUsers.get(i).equals(neg)){
                     NegUsers.get(i).addInvestmentToUser(pos.getName(), pos.getInvestment());
@@ -181,6 +219,8 @@ public class Calculation {
 
                 }
             }
+            // Beim positiven User wird der Name des Negativen Users und das
+            // eigene Investment in die Liste des Habens eingetragen.
             for( int i = 0; i < PosUsers.size(); i++) {
                 if (PosUsers.get(i).equals(pos)){
                     PosUsers.get(i).addHabenToUser(neg.getName(),pos.getInvestment());
@@ -190,31 +230,35 @@ public class Calculation {
             }
 
 
-            return 2;
+            return 2; // weiter mit positiven User. Negativer User bleibt.
 
 
         }if (result == 0){
-            // weiter mit positiver und negativer Zahl.
+
             System.out.println("result3:" + result);
             System.out.println("if==0"+ pos.getName()+ pos.getInvestment() + neg.getName() + neg.getInvestment());
 
-
+            //Beim negativen User wird der Name des positiven Users und das
+            // eigene investment in die Liste der Schulden eingetragen.
             for( int i =0; i < NegUsers.size(); i++) {
                 if (NegUsers.get(i).equals(neg)){
                     NegUsers.get(i).addInvestmentToUser(pos.getName(), neg.getInvestment()*(-1));
+                    postnegativInvestment = neg.getInvestment()*(-1);
                     NegUsers.get(i).setInvestment(0);
 
                 }
             }
+            // Beim positiven User wird der Name des negativen und
+            // das investment des negativen Users in die Liste des Habens eingetragen
             for( int i =0; i < PosUsers.size(); i++) {
                 if (PosUsers.get(i).equals(pos)){
-                    PosUsers.get(i).addHabenToUser(neg.getName(),neg.getInvestment() *(-1));
+                    PosUsers.get(i).addHabenToUser(neg.getName(),postnegativInvestment);
                     PosUsers.get(i).setInvestment(0);
 
                 }
             }
 
-            return 3;
+            return 3; // weiter mit positiven User und negativen User.
 
 
         }	else

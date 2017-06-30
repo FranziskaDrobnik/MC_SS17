@@ -4,6 +4,9 @@ package mocosose17.wgapp;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Hilfsobject zum Speichern der User und deren Investment
+ */
 public class UserAdapter {
     private String name;
     private double fistEdition;
@@ -22,6 +25,33 @@ public class UserAdapter {
         this.name = name;
         this.fistEdition = fistEdition;
     }
+
+
+    // auszurechnendes investment. Nach Bildung der Summe der firstEdition aller User
+    // und Teilung der Summe durch die Anzahl der User. und Abzug der First edition - Summe.
+    public void setInvestment(double investment) {
+        this.investment = investment;
+    }
+
+
+
+    // gibt an, ob das investment positiv ist.
+    public boolean isPositiv() {
+        return isPositiv;
+    }
+    public void setPositiv(boolean isPositiv) {
+        this.isPositiv = isPositiv;
+    }
+
+    // tatsächliche Ausgaben des Users aus der Datenbank.
+    public void setFistEdition(double fistEdition) {
+        this.fistEdition = fistEdition;
+    }
+
+    // tatsächliche Ausgaben des Uses aus der Datenbank.
+    public double getFistEdition() {
+        return fistEdition;
+    }
     public String getName() {
         return name;
     }
@@ -31,34 +61,18 @@ public class UserAdapter {
     public double getInvestment() {
         return investment;
     }
-    public void setInvestment(double investment) {
-        this.investment = investment;
-    }
-    public boolean isPositiv() {
-        return isPositiv;
-    }
-    public Map<String, Double> getUsersSchulden() {
-
-        return usersSchulden;
-    }
 
     public Map<String, Double> getUsersHaben() {
         return usersHaben;
     }
-
-    public void setPositiv(boolean isPositiv) {
-        this.isPositiv = isPositiv;
-    }
+    public Map<String, Double> getUsersSchulden() {return usersSchulden;}
 
 
-    public double getFistEdition() {
-        return fistEdition;
-    }
-
-    public void setFistEdition(double fistEdition) {
-        this.fistEdition = fistEdition;
-    }
-    //Hinzufügen der Schulden Mit Name des zu bezahlenden und zu Bezahlenden Betrages
+    /**
+     * Hinzufügen der Schulden Mit Name des zu bezahlenden und zu Bezahlenden Betrages
+     * @param user User der Eingetragen soll, an den der this.User das Geld zahlen muss.
+     * @param investment Der Betrag den der der eingetragene User bekommt.
+     */
     public void addInvestmentToUser(String user, double investment){
         double i = 0;
         if(usersSchulden.containsKey(user)){
@@ -76,7 +90,13 @@ public class UserAdapter {
 
     }
 
-    //Hinzufügen des bekommens. Mit Namen, des zu bekommendes und des bekommenden Betrages
+
+
+    /**
+     * Hinzufügen des bekommens. Mit Namen, des zu bekommendes und des bekommenden Betrages.
+     * @param user User der Eingetragen soll, von dem der this.User das Geld bekommt.
+     * @param investment Der Betrag den der this.User bekommt.
+     */
     public void addHabenToUser(String user, double investment){
         System.out.println("investment"+ investment);
         if(usersHaben.containsKey(user)){
