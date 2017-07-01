@@ -126,7 +126,6 @@ public class SpeisekammerActivityList extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case R.id.menu_logout: {
-                        //do somthing
                         GlobalObjects go = GlobalObjects.getInstance();
                         go.setUsername(null);
                         Intent i = new Intent(SpeisekammerActivityList.this, MainActivity.class);
@@ -134,19 +133,16 @@ public class SpeisekammerActivityList extends AppCompatActivity {
                         break;
                     }
                     case R.id.menu_investment: {
-                        //do somthing
                         Intent i = new Intent(SpeisekammerActivityList.this, InvestmentActivity.class);
                         startActivity(i);
                         break;
                     }
                     case R.id.menu_pantry: {
-                        //do somthing
                         Intent i = new Intent(SpeisekammerActivityList.this, SpeisekammerActivityStart.class);
                         startActivity(i);
                         break;
                     }
                     case R.id.menu_shoppinglist: {
-                        //do somthing
                         Intent i = new Intent(SpeisekammerActivityList.this, ShoppinglistActivity.class);
                         startActivity(i);
                         break;
@@ -220,6 +216,10 @@ public class SpeisekammerActivityList extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        GlobalObjects go = GlobalObjects.getInstance();
+        TextView txtUser = (TextView) findViewById(R.id.txtUsername);
+        txtUser.setText(go.getUsername());
         return true;
     }
 

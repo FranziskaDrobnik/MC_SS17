@@ -92,7 +92,6 @@ public class InvestmentActivity extends AppCompatActivity {
                  switch (item.getItemId()) {
 
                      case R.id.menu_logout: {
-                         //do somthing
                          GlobalObjects go = GlobalObjects.getInstance();
                          go.setUsername(null);
                          Intent i = new Intent(InvestmentActivity.this, MainActivity.class);
@@ -100,20 +99,17 @@ public class InvestmentActivity extends AppCompatActivity {
                          break;
                      }
                      case R.id.menu_investment: {
-                         //do somthing
                          Intent i = new Intent(InvestmentActivity.this, InvestmentActivity.class);
                          startActivity(i);
                          break;
                      }
                      case R.id.menu_pantry: {
-                         //do somthing
                          Intent i = new Intent(InvestmentActivity.this,
                                  SpeisekammerActivityStart.class);
                          startActivity(i);
                          break;
                      }
                      case R.id.menu_shoppinglist: {
-                         //do somthing
                          Intent i = new Intent(InvestmentActivity.this, ShoppinglistActivity.class);
                          startActivity(i);
                          break;
@@ -194,6 +190,10 @@ public class InvestmentActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        GlobalObjects go = GlobalObjects.getInstance();
+        TextView txtUser = (TextView) findViewById(R.id.txtUsername);
+        txtUser.setText(go.getUsername());
         return true;
     }
 
@@ -347,12 +347,14 @@ public class InvestmentActivity extends AppCompatActivity {
 
 
                                         TableRow tr = new TableRow(InvestmentActivity.this);
+                                        CheckBox checkbox = new CheckBox(InvestmentActivity.this);
                                         amount.setTextColor(Color.GREEN);
                                         amount.setTextSize(20);
                                         usernameHaben.setMinHeight(50);
                                         tr.setBottom(200);
                                         tr.addView(usernameHaben);
                                         tr.addView(amount);
+                                        tr.addView(checkbox);
                                         layout.addView(tr);
                                     }
 
@@ -411,7 +413,7 @@ public class InvestmentActivity extends AppCompatActivity {
 
             final int id = CHECK_BUTTON_ID;
             resetInvestment.setId(id);
-            resetInvestment.setText("reset Investment");
+            resetInvestment.setText("CLEAR SELECTED");
             layout.addView(table_row1);
             layout.addView(table_row);
 
@@ -430,13 +432,44 @@ public class InvestmentActivity extends AppCompatActivity {
                         } else {
                             builder = new AlertDialog.Builder(InvestmentActivity.this);
                         }
-                        builder.setTitle("Delete investment")
-                                .setMessage("Are you sure you want to delete investment?")
+                        builder.setTitle("Received Payments")
+                                .setMessage("Are you sure you want to mark selected as received?")
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         System.out.println("Delete");
                                         // Löschen der Investmenteinträge
-                                        new ExecuteDeleteMethod().execute();
+//                                        new ExecuteDeleteMethod().execute();
+
+                                        for (int i = 0; i < layout.getChildCount(); i++) {
+                                            View child = layout.getChildAt(i);
+
+                                            if (child instanceof TableRow) {
+                                                TableRow row = (TableRow) child;
+
+
+                                                for (int x = 0; x < row.getChildCount(); x++) {
+                                                    View column = row.getChildAt(x);
+
+                                                    if(column instanceof CheckBox){
+                                                        CheckBox box = (CheckBox) column;
+
+                                                        if(box.isChecked()) {
+                                                            TextView txtUser = (TextView) row.getChildAt(0);
+                                                            TextView txtAmount = (TextView) row.getChildAt(1);
+                                                            System.out.println("box selected? "+box.isChecked());
+                                                            System.out.println("user: "+txtUser.getText().toString());
+                                                            System.out.println("amount "+txtAmount.getText().toString());
+                                                            Double amount = Double.parseDouble(txtAmount.getText().toString());
+                                                            System.out.println("amountDouble "+amount.toString());
+                                                            new ReceivedPayment().execute(txtUser.getText().toString(), amount.toString());
+
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+                                        }
+
                                         startActivity(getIntent());
                                     }
                                 })
@@ -565,6 +598,67 @@ Löschen aller Einträge von Investment
 
     }
 
+    /**
+     *   Mark Payments as Received in DB
+     */
+
+    private class ReceivedPayment extends AsyncTask<String,Void, Void> {
+        private String response;
+
+
+        @Override
+        protected Void doInBackground(String... params) {
+            URL url;
+            JSONObject object = new JSONObject();
+            try {
+                object.put("userPayed", params[0]);
+                object.put("amount", params[1]);
+                object.put("userReceived", (globalObjs.getUsername()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            try {
+                url = new URL("http://mc-wgapp.mybluemix.net/receivedPayment");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("PUT");
+                conn.setRequestProperty("Content-Type", "application/json");
+
+
+
+                String str = object.toString();
+                byte[] outputBytes = str.getBytes("UTF-8");
+                OutputStream os = conn.getOutputStream();
+                os.write(outputBytes);
+
+
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //Log.e(TAG, "14 - HTTP_OK");
+
+
+                    String line;
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    while ((line = br.readLine()) != null) {
+                        response += line;
+                    }
+                } else {
+                    //Log.e(TAG, "14 - False - HTTP_OK");
+                    response = "";
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Log.d("RESPONSE PAYMENT", response);
+
+
+            return null;
+        }
+
+    }
 
 
 }

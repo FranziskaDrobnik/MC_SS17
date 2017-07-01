@@ -20,26 +20,30 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+/**
+ * App entry point, Activity to Log-In
+ * @author Tobias Lampprecht
+ * @version 1.0
+ */
 public class MainActivity extends AppCompatActivity {
     private EditText inputUsername;
     private EditText inputPassword;
-    private TextView txtUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Remove title bar
-//        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
         inputUsername = (EditText) findViewById(R.id.LoginUsername);
         inputPassword = (EditText) findViewById(R.id.LoginPassword);
-//        txtUser = (TextView) findViewById(R.id.txtUsername);
     }
 
-
+    /**
+     * onClick listener for Login-button
+     * executing AsyncTask to get Data from the API
+     * @param view
+     */
     public void executeLogin(View view){
         String username = inputUsername.getText().toString();
         String password = inputPassword.getText().toString();
@@ -48,12 +52,19 @@ public class MainActivity extends AppCompatActivity {
         new VerifyLogin(MainActivity.this).execute(username, password);
     }
 
+    /**
+     * onClick listener for no-account text
+     * starting RegisterActivity
+     * @param view
+     */
     public void noAccount(View view){
         Intent i = new Intent(this, RegisterActivity.class);
         startActivity(i);
     }
 
-
+    /**
+     * Class to receive Data from the API
+     */
     class VerifyLogin extends AsyncTask<String, Void, Void> {
         public String response = "";
         private Context context;
@@ -63,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
             this.context = context;
         }
 
+        /**
+         * Background Task is receiving true or false as response
+         * if the login was successful
+         * @param params username, password
+         * @return null
+         */
         @Override
         protected Void doInBackground(String... params) {
             URL url;
@@ -72,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
-
-
 
 
                 JSONObject credentials = new JSONObject();
@@ -107,46 +122,26 @@ public class MainActivity extends AppCompatActivity {
             Log.d("RESPONSE", response);
 
 
-//        try {
-//            JSONArray json = new JSONArray(response);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-
             return null;
         }
 
+        /**
+         * Executed when background-task has finished
+         * if response(true) setting username as global object and start ShoppinglistActivity
+         * if response(false) showing Toast login failed
+         * @param unused
+         */
         protected void onPostExecute(Void unused){
             if(Boolean.valueOf(response)){
-                Toast.makeText(context,"login success",Toast.LENGTH_LONG).show();
                 GlobalObjects globalObjs = GlobalObjects.getInstance();
                 globalObjs.setUsername(username);
-//                txtUser.setText(username);
 
-
-                Log.e("USERinLogin", globalObjs.getUsername());
                 Intent i = new Intent(context, ShoppinglistActivity.class);
                 context.startActivity(i);
             }else{
                 Toast.makeText(context,"login failed",Toast.LENGTH_LONG).show();
             }
-//        user1 = (TextView) findViewById(R.id.User1TextView);
-//
-//
-//        try {
-//            usernames = new JSONArray(response);
-//            for (int i = 0; i <usernames.length(); i++) {
-//                JSONObject usernameObject = usernames.getJSONObject(i);
-//                System.out.println(usernameObject.getString("username"));
-//                users.add(usernameObject.getString("username"));
-//
-//                user1.setText(usernameObject.getString("username"));
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
 
         }
 

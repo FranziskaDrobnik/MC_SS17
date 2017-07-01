@@ -78,7 +78,6 @@ public class ShoppinglistActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case R.id.menu_logout: {
-                        //do somthing
                         GlobalObjects go = GlobalObjects.getInstance();
                         go.setUsername(null);
                         Intent i = new Intent(ShoppinglistActivity.this, MainActivity.class);
@@ -86,19 +85,16 @@ public class ShoppinglistActivity extends AppCompatActivity {
                         break;
                     }
                     case R.id.menu_investment: {
-                        //do somthing
                         Intent i = new Intent(ShoppinglistActivity.this, InvestmentActivity.class);
                         startActivity(i);
                         break;
                     }
                     case R.id.menu_pantry: {
-                        //do somthing
                         Intent i = new Intent(ShoppinglistActivity.this, SpeisekammerActivityStart.class);
                         startActivity(i);
                         break;
                     }
                     case R.id.menu_shoppinglist: {
-                        //do somthing
                         Intent i = new Intent(ShoppinglistActivity.this, ShoppinglistActivity.class);
                         startActivity(i);
                         break;

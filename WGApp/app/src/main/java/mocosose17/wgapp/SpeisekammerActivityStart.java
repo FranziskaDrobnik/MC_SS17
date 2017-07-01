@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +73,6 @@ public class SpeisekammerActivityStart extends AppCompatActivity{
                 switch (item.getItemId()) {
 
                     case R.id.menu_logout: {
-                        //do somthing
                         GlobalObjects go = GlobalObjects.getInstance();
                         go.setUsername(null);
                         Intent i = new Intent(SpeisekammerActivityStart.this, MainActivity.class);
@@ -80,19 +80,16 @@ public class SpeisekammerActivityStart extends AppCompatActivity{
                         break;
                     }
                     case R.id.menu_investment: {
-                        //do somthing
                         Intent i = new Intent(SpeisekammerActivityStart.this, InvestmentActivity.class);
                         startActivity(i);
                         break;
                     }
                     case R.id.menu_pantry: {
-                        //do somthing
                         Intent i = new Intent(SpeisekammerActivityStart.this, SpeisekammerActivityStart.class);
                         startActivity(i);
                         break;
                     }
                     case R.id.menu_shoppinglist: {
-                        //do somthing
                         Intent i = new Intent(SpeisekammerActivityStart.this, ShoppinglistActivity.class);
                         startActivity(i);
                         break;
@@ -198,6 +195,10 @@ public class SpeisekammerActivityStart extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        GlobalObjects go = GlobalObjects.getInstance();
+        TextView txtUser = (TextView) findViewById(R.id.txtUsername);
+        txtUser.setText(go.getUsername());
         return true;
     }
 
